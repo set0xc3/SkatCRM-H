@@ -1,0 +1,10 @@
+.direnv/
+.env
+
+# Go workspace file
+go.work
+tmp/
+
+# Project build
+build/
+*templ.go
