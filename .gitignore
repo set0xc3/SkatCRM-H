@@ -1,5 +1,6 @@
 .direnv/
 .env
+*.db
 
 # Go workspace file
 go.work

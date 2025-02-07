@@ -16,6 +16,9 @@
     in {
       devShells.default = pkgs.mkShell {
         packages = with pkgs; [
+          cobra-cli
+          sqlite
+          goose
           templ
           jq
           go

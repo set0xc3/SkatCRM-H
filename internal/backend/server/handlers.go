@@ -10,16 +10,22 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// func (s *Server) GetClientsHandler(c echo.Context) error {
+// clients, err := s.clientRepo.GetClients()
+//    if err != nil {
+//        http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+//        return
+//    }
+
+// return c.JSON(http.StatusOK, s.db.Health())
+// }
+
 func (s *Server) HelloWorldHandler(c echo.Context) error {
 	resp := map[string]string{
 		"message": "Hello World",
 	}
 
 	return c.JSON(http.StatusOK, resp)
-}
-
-func (s *Server) healthHandler(c echo.Context) error {
-	return c.JSON(http.StatusOK, s.db.Health())
 }
 
 func (s *Server) websocketHandler(c echo.Context) error {
@@ -47,5 +53,9 @@ func (s *Server) websocketHandler(c echo.Context) error {
 		}
 		time.Sleep(time.Second * 2)
 	}
+	return nil
+}
+
+func (s *Server) getClientsHandler(c echo.Context) error {
 	return nil
 }

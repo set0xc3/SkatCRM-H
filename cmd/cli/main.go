@@ -1,7 +1,6 @@
 package main
 
 import (
-	"SkatCRM-Tiny/internal/backend/server"
 	"context"
 	"fmt"
 	"log"
@@ -9,6 +8,8 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"SkatCRM-Tiny/internal/backend/server"
 )
 
 func gracefulShutdown(apiServer *http.Server, done chan bool) {

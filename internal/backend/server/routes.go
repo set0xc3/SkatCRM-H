@@ -26,8 +26,15 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.GET("/assets/*", echo.WrapHandler(fileServer))
 
 	e.GET("/", echo.HandlerFunc(s.HelloWorldHandler))
-	e.GET("/health", echo.HandlerFunc(s.healthHandler))
 	e.GET("/websocket", echo.HandlerFunc(s.websocketHandler))
+
+	// TODO: Client
+	// e.GET("/api/v1/clients", nil)
+	// e.GET("/api/v1/clients/:count/:offset", nil)
+	// e.GET("/api/v1/client/:id", nil)
+
+	// e.POST("/api/v1/client", nil)
+	// e.DELETE("/api/v1/client/:id", nil)
 
 	return e
 }
