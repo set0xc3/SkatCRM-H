@@ -1,3 +1,13 @@
+// Database:
+//
+// 	[sqlite3] test.db
+// 		[entity] users
+//
+// 	[sqlite3] crm.db
+// 		[entity] clients
+// 		[entity] products
+//		[entity] calls
+
 package database
 
 import (
@@ -11,26 +21,28 @@ import (
 )
 
 type Database struct {
-	db        *sql.DB
 	clientEnt entities.ClientEntity
 }
 
-func Open() *Database {
+func Init() *Database {
 	dbUrl := os.Getenv("DB_URL")
-	db, err := sql.Open("sqlite3", dbUrl)
 
+	db, err := sql.Open("sqlite3", dbUrl)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	if err = db.Ping(); err != nil {
+		log.Fatal(err)
+	}
+
 	ctx := &Database{
-		db:        db,
-		clientEnt: *entities.NewClientEntity(db),
+		clientEnt: *entities.NewClientEntity(db, dbUrl),
 	}
 
 	return ctx
 }
 
-func Close(s *Database) error {
-	return s.db.Close()
+func (ctx *Database) GetClientInstance() *entities.ClientEntity {
+	return &ctx.clientEnt
 }

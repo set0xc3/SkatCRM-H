@@ -27,11 +27,12 @@ type ClientInfo struct {
 }
 
 type ClientEntity struct {
-	db *sql.DB
+	db    *sql.DB
+	dbUrl string
 }
 
-func NewClientEntity(db *sql.DB) *ClientEntity {
-	return &ClientEntity{db: db}
+func NewClientEntity(db *sql.DB, dbUrl string) *ClientEntity {
+	return &ClientEntity{db: db, dbUrl: dbUrl}
 }
 
 func (r *ClientEntity) GetAllClients() ([]ClientInfo, error) {
@@ -96,6 +97,16 @@ func (r *ClientEntity) GetClientByID(id string) (*ClientInfo, error) {
 }
 
 func (r *ClientEntity) AddClient(client ClientInfo) error {
+	existsQuery := "SELECT id FROM clients WHERE id = ?"
+	var existingID string
+	err := r.db.QueryRow(existsQuery, client.Id, client.Email).Scan(&existingID)
+	if err != sql.ErrNoRows {
+		if err == nil {
+			return fmt.Errorf("client with id %s or email %s already exists", client.Id, client.Email)
+		}
+		return fmt.Errorf("failed to check if client exists: %w", err)
+	}
+
 	query := `
     INSERT INTO clients (
         id, id2, mark, contractor, full_name, type, phones, email,
@@ -103,7 +114,7 @@ func (r *ClientEntity) AddClient(client ClientInfo) error {
         reg_data_1, reg_data_2, note, request_count, birthday, income
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `
-	_, err := r.db.Exec(
+	_, err = r.db.Exec(
 		query,
 		client.Id, client.Id2, client.Mark, client.Contractor, client.FullName,
 		client.Type, client.Phones, client.Email, client.LegalAddress,
