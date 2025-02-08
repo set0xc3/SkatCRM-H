@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-type Client struct {
+type ClientInfo struct {
 	Id               string `db:"id" json:"id"`
 	Id2              string `db:"id2" json:"id2"`
 	Mark             string `db:"mark" json:"mark"`
@@ -26,15 +26,15 @@ type Client struct {
 	Income           string `db:"income" json:"income"`
 }
 
-type ClientRepository struct {
+type ClientEntity struct {
 	db *sql.DB
 }
 
-func NewClientRepository(db *sql.DB) *ClientRepository {
-	return &ClientRepository{db: db}
+func NewClientEntity(db *sql.DB) *ClientEntity {
+	return &ClientEntity{db: db}
 }
 
-func (r *ClientRepository) GetAllClients() ([]Client, error) {
+func (r *ClientEntity) GetAllClients() ([]ClientInfo, error) {
 	query := `
     SELECT
         id, id2, mark, contractor, full_name, type, phones, email,
@@ -48,9 +48,9 @@ func (r *ClientRepository) GetAllClients() ([]Client, error) {
 	}
 	defer rows.Close()
 
-	var clients []Client
+	var clients []ClientInfo
 	for rows.Next() {
-		var client Client
+		var client ClientInfo
 		err := rows.Scan(
 			&client.Id, &client.Id2, &client.Mark, &client.Contractor, &client.FullName,
 			&client.Type, &client.Phones, &client.Email, &client.LegalAddress,
@@ -67,7 +67,7 @@ func (r *ClientRepository) GetAllClients() ([]Client, error) {
 	return clients, nil
 }
 
-func (r *ClientRepository) GetClientByID(id string) (*Client, error) {
+func (r *ClientEntity) GetClientByID(id string) (*ClientInfo, error) {
 	query := `
     SELECT
         id, id2, mark, contractor, full_name, type, phones, email,
@@ -78,7 +78,7 @@ func (r *ClientRepository) GetClientByID(id string) (*Client, error) {
     `
 	row := r.db.QueryRow(query, id)
 
-	var client Client
+	var client ClientInfo
 	err := row.Scan(
 		&client.Id, &client.Id2, &client.Mark, &client.Contractor, &client.FullName,
 		&client.Type, &client.Phones, &client.Email, &client.LegalAddress,
@@ -95,7 +95,7 @@ func (r *ClientRepository) GetClientByID(id string) (*Client, error) {
 	return &client, nil
 }
 
-func (r *ClientRepository) AddClient(client Client) error {
+func (r *ClientEntity) AddClient(client ClientInfo) error {
 	query := `
     INSERT INTO clients (
         id, id2, mark, contractor, full_name, type, phones, email,
@@ -118,7 +118,7 @@ func (r *ClientRepository) AddClient(client Client) error {
 	return nil
 }
 
-func (r *ClientRepository) AddEmptyClient() error {
+func (r *ClientEntity) AddEmptyClient() error {
 	query := `
     INSERT INTO clients (
         id2, mark, contractor, full_name, type, phones, email,
@@ -136,7 +136,7 @@ func (r *ClientRepository) AddEmptyClient() error {
 	return nil
 }
 
-func (r *ClientRepository) RemoveClient(id string) error {
+func (r *ClientEntity) RemoveClient(id string) error {
 	query := "DELETE FROM clients WHERE id = ?"
 	result, err := r.db.Exec(query, id)
 	if err != nil {

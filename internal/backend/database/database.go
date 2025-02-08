@@ -10,30 +10,27 @@ import (
 	"SkatCRM-Tiny/internal/backend/database/entities"
 )
 
-type Service struct {
-	db         *sql.DB
-	clientRepo entities.ClientRepository
+type Database struct {
+	db        *sql.DB
+	clientEnt entities.ClientEntity
 }
 
-var (
-	dbUrl = os.Getenv("DB_URL")
-)
-
-func Open() *Service {
+func Open() *Database {
+	dbUrl := os.Getenv("DB_URL")
 	db, err := sql.Open("sqlite3", dbUrl)
+
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	s := &Service{
-		db:         db,
-		clientRepo: *entities.NewClientRepository(db),
+	ctx := &Database{
+		db:        db,
+		clientEnt: *entities.NewClientEntity(db),
 	}
 
-	return s
+	return ctx
 }
 
-func Close(s *Service) error {
-	log.Printf("Disconnected from database: %s", dbUrl)
+func Close(s *Database) error {
 	return s.db.Close()
 }
