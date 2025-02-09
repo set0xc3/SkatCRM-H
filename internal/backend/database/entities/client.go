@@ -36,15 +36,16 @@ func NewClientEntity(db *sql.DB, dbUrl string) *ClientEntity {
 	return &ClientEntity{db: db, dbUrl: dbUrl}
 }
 
-func (r *ClientEntity) GetClients() ([]ClientInfo, error) {
+func (r *ClientEntity) GetClients(count int, offset int) ([]ClientInfo, error) {
 	query := `
     SELECT
         id, id2, mark, contractor, full_name, type, phones, email,
         legal_address, physical_address, registration_date, ad_channel,
         reg_data_1, reg_data_2, note, request_count, birthday, income
     FROM clients
+    LIMIT ? OFFSET ?
     `
-	rows, err := r.db.Query(query)
+	rows, err := r.db.Query(query, count, offset)
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute query: %w", err)
 	}

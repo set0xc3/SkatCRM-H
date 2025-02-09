@@ -1,0 +1,44 @@
+package views
+
+import (
+	"SkatCRM-Tiny/internal/backend/api"
+	"SkatCRM-Tiny/internal/backend/database/entities"
+	_ "SkatCRM-Tiny/internal/frontend/templates/components"
+)
+
+templ ClientsTempl() {
+	<div class="overflow-x-auto">
+		<table class="table table-xs">
+			<!-- head -->
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Id2</th>
+					<th>Метка</th>
+					<th>ФИО</th>
+					<th>Телефон</th>
+					<th>Адрес</th>
+					<th>Эл.почта</th>
+				</tr>
+			</thead>
+			<tbody hx-confirm="Вы уверены?" hx-target="closest tr">
+				{{ count := 10 }}
+				{{ offset := 0 }}
+				{{ clients, _ := api.FetchEntities[entities.ClientInfo]("/api/v1/clients", count, offset) }}
+				for _, client := range clients {
+					<tr>
+						<td>{ client.Id }</td>
+						<td>{ client.Id2 }</td>
+						<td>{ client.Mark }</td>
+						<td>{ client.FullName }</td>
+						<td>{ client.Phones }</td>
+						<td>{ client.LegalAddress }</td>
+						<td>{ client.Email }</td>
+						<td><button class="btn" hx-delete={ "/api/v1/client/" + client.Id }>Delete</button></td>
+					</tr>
+				}
+			</tbody>
+		</table>
+		// @components.Pagination(currPage, clientCount, "clients")
+	</div>
+}

@@ -2,6 +2,8 @@
 .env
 *.db
 
+tw.css
+
 # Go workspace file
 go.work
 tmp/

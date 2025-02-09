@@ -91,7 +91,7 @@ func main() {
 
 	// client_ent.RemoveClient("c6deac48-e642-11ef-ab12-e8fb1cd4192d")
 
-	clients, _ := client_ent.GetClients()
+	clients, _ := client_ent.GetClients(10, 0)
 	jsonData, err := json.Marshal(clients)
 	if err != nil {
 		fmt.Println("Ошибка при сериализации:", err)

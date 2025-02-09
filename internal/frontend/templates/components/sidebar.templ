@@ -1,0 +1,24 @@
+package components
+
+templ SidebarTempl(items []SidebarItem) {
+	<aside class="rounded-[5px] w-[150px] min-h-screen bg-white p-[8px] m-0">
+		<ul class="flex flex-col m-0 p-0 gap-[5px]">
+			for _, item := range items {
+				<li>
+					<button
+						class={ "bg-[#F0F1F2] py-[5px] flex items-center h-[28px] rounded-[5px] pl-[5px] min-w-full text-sm gap-[8px]" }
+						hx-get={ "/views/" + item.URL }
+						hx-push-url={ "/" + item.URL }
+						hx-swap="innerHTML"
+						hx-target="main"
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={ item.Icon }></path>
+						</svg>
+						{ item.Name }
+					</button>
+				</li>
+			}
+		</ul>
+	</aside>
+}

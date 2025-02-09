@@ -2,11 +2,14 @@ package server
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
 	"SkatCRM-Tiny/internal/frontend"
+	"SkatCRM-Tiny/internal/frontend/templates"
+	"SkatCRM-Tiny/internal/frontend/templates/views"
 )
 
 func (s *Server) RegisterRoutes() http.Handler {
@@ -29,9 +32,20 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.GET("/websocket", echo.HandlerFunc(s.websocketHandler))
 
 	// TODO: Client
-	e.GET("/view/clients", echo.HandlerFunc(s.GetClientsHandler))
+	e.GET("/clients", func(c echo.Context) error {
+		return templates.Render(c, templates.LayoutTempl(views.ClientsTempl()))
+	})
+	e.GET("/view/clients", func(c echo.Context) error {
+		return templates.Render(c, views.ClientsTempl())
+	})
 	// e.GET("/api/v1/clients", nil)
-	// e.GET("/api/v1/clients/:count/:offset", nil)
+	e.GET("/api/v1/clients/:count/:offset", func(c echo.Context) error {
+		count, _ := strconv.Atoi(c.Param("count"))
+		offset, _ := strconv.Atoi(c.Param("offset"))
+
+		clients, _ := s.db.GetClientInstance().GetClients(count, offset)
+		return c.JSON(http.StatusOK, clients)
+	})
 	// e.GET("/api/v1/client/:id", nil)
 
 	// e.POST("/api/v1/client", nil)

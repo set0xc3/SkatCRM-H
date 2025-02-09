@@ -7,5 +7,6 @@
 `go get -u github.com/pressly/goose/v3/cmd/goose@latest`
 `go get -u github.com/spf13/cobra@latest`
 
-
 `goose -s create -dir migrations/ add_clients_table sql`
+
+`tailwindcss init`
