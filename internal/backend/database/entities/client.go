@@ -3,6 +3,7 @@ package entities
 import (
 	"database/sql"
 	"fmt"
+	"strings"
 )
 
 type ClientInfo struct {
@@ -35,7 +36,7 @@ func NewClientEntity(db *sql.DB, dbUrl string) *ClientEntity {
 	return &ClientEntity{db: db, dbUrl: dbUrl}
 }
 
-func (r *ClientEntity) GetAllClients() ([]ClientInfo, error) {
+func (r *ClientEntity) GetClients() ([]ClientInfo, error) {
 	query := `
     SELECT
         id, id2, mark, contractor, full_name, type, phones, email,
@@ -152,6 +153,38 @@ func (r *ClientEntity) RemoveClient(id string) error {
 	result, err := r.db.Exec(query, id)
 	if err != nil {
 		return fmt.Errorf("failed to delete client: %w", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to get rows affected: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("client with id %s not found", id)
+	}
+
+	return nil
+}
+
+func (r *ClientEntity) UpdateClient(id string, updates map[string]interface{}) error {
+	if len(updates) == 0 {
+		return fmt.Errorf("no updates provided")
+	}
+
+	setClauses := make([]string, 0, len(updates))
+	args := make([]interface{}, 0, len(updates)+1)
+
+	for field, value := range updates {
+		setClauses = append(setClauses, fmt.Sprintf("%s = ?", field))
+		args = append(args, value)
+	}
+	args = append(args, id)
+
+	query := fmt.Sprintf("UPDATE clients SET %s WHERE id = ?", strings.Join(setClauses, ", "))
+	result, err := r.db.Exec(query, args...)
+	if err != nil {
+		return fmt.Errorf("failed to update client: %w", err)
 	}
 
 	rowsAffected, err := result.RowsAffected()

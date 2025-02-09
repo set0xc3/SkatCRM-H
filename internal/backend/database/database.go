@@ -1,9 +1,9 @@
 // Database:
 //
-// 	[sqlite3] test.db
+// 	[driver] test.db
 // 		[entity] users
 //
-// 	[sqlite3] crm.db
+// 	[driver] crm.db: open, close
 // 		[entity] clients
 // 		[entity] products
 //		[entity] calls

@@ -29,6 +29,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.GET("/websocket", echo.HandlerFunc(s.websocketHandler))
 
 	// TODO: Client
+	e.GET("/view/clients", echo.HandlerFunc(s.GetClientsHandler))
 	// e.GET("/api/v1/clients", nil)
 	// e.GET("/api/v1/clients/:count/:offset", nil)
 	// e.GET("/api/v1/client/:id", nil)

@@ -10,15 +10,10 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// func (s *Server) GetClientsHandler(c echo.Context) error {
-// clients, err := s.clientRepo.GetClients()
-//    if err != nil {
-//        http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-//        return
-//    }
-
-// return c.JSON(http.StatusOK, s.db.Health())
-// }
+func (s *Server) GetClientsHandler(c echo.Context) error {
+	clients, _ := s.db.GetClientInstance().GetClients()
+	return c.JSON(http.StatusOK, clients)
+}
 
 func (s *Server) HelloWorldHandler(c echo.Context) error {
 	resp := map[string]string{
