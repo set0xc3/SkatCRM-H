@@ -32,9 +32,12 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.GET("/", echo.HandlerFunc(s.HelloWorldHandler))
 	e.GET("/websocket", echo.HandlerFunc(s.websocketHandler))
 
-	// TODO: Client
 	e.GET("/clients", func(c echo.Context) error {
 		return templates.Render(c, templates.LayoutTempl(views.ClientsTempl()))
+	})
+	// TODO
+	e.GET("/modal", func(c echo.Context) error {
+		return templates.Render(c, views.ClientsModalAddClientTempl())
 	})
 	// e.GET("/view/clients", func(c echo.Context) error {
 	// 	return templates.Render(c, views.ClientsTempl())
