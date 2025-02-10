@@ -36,7 +36,7 @@ func NewClientEntity(db *sql.DB, dbUrl string) *ClientEntity {
 	return &ClientEntity{db: db, dbUrl: dbUrl}
 }
 
-func (r *ClientEntity) GetClients(count int, offset int) ([]ClientInfo, error) {
+func (r *ClientEntity) FetchClients(count int, offset int) ([]ClientInfo, error) {
 	query := `
     SELECT
         id, id2, mark, contractor, full_name, type, phones, email,
@@ -70,7 +70,7 @@ func (r *ClientEntity) GetClients(count int, offset int) ([]ClientInfo, error) {
 	return clients, nil
 }
 
-func (r *ClientEntity) GetClientByID(id string) (*ClientInfo, error) {
+func (r *ClientEntity) FetchClientByID(id string) (*ClientInfo, error) {
 	query := `
     SELECT
         id, id2, mark, contractor, full_name, type, phones, email,
@@ -98,7 +98,7 @@ func (r *ClientEntity) GetClientByID(id string) (*ClientInfo, error) {
 	return &client, nil
 }
 
-func (r *ClientEntity) AddClient(client ClientInfo) error {
+func (r *ClientEntity) InsertClient(client ClientInfo) error {
 	existsQuery := "SELECT id FROM clients WHERE id = ?"
 	var existingID string
 	err := r.db.QueryRow(existsQuery, client.Id, client.Email).Scan(&existingID)
@@ -131,25 +131,7 @@ func (r *ClientEntity) AddClient(client ClientInfo) error {
 	return nil
 }
 
-func (r *ClientEntity) AddEmptyClient() error {
-	query := `
-    INSERT INTO clients (
-        id2, mark, contractor, full_name, type, phones, email,
-        legal_address, physical_address, registration_date, ad_channel,
-        reg_data_1, reg_data_2, note, request_count, birthday, income
-    ) VALUES (
-        NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, 0
-    )`
-
-	_, err := r.db.Exec(query)
-	if err != nil {
-		return fmt.Errorf("failed to insert empty client: %w", err)
-	}
-	return nil
-}
-
-func (r *ClientEntity) RemoveClient(id string) error {
+func (r *ClientEntity) DeleteClient(id string) error {
 	query := "DELETE FROM clients WHERE id = ?"
 	result, err := r.db.Exec(query, id)
 	if err != nil {

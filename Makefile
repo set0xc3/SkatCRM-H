@@ -1,6 +1,11 @@
-.PHONY: all pre-build build run-cli run-server clean
+include .env
+
+.PHONY: all migrations pre-build build run-cli run-server clean
 
 all: build
+
+migrations:
+	@goose -dir ./migrations/ sqlite3 ${DB_URL} up
 
 pre-build:
 	@mkdir -p build
