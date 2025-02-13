@@ -11,3 +11,5 @@ tmp/
 # Project build
 build/
 *templ.go
+
+node_modules/

@@ -32,16 +32,15 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.GET("/", echo.HandlerFunc(s.HelloWorldHandler))
 	e.GET("/websocket", echo.HandlerFunc(s.websocketHandler))
 
+	e.GET("/sandbox", func(c echo.Context) error {
+		return templates.Render(c, templates.LayoutTempl(views.SandboxTempl()))
+	})
 	e.GET("/clients", func(c echo.Context) error {
 		return templates.Render(c, templates.LayoutTempl(views.ClientsTempl()))
 	})
-	// TODO
-	e.GET("/modal", func(c echo.Context) error {
-		return templates.Render(c, views.ClientsModalAddClientTempl())
+	e.GET("/views/clients", func(c echo.Context) error {
+		return templates.Render(c, views.ClientsTempl())
 	})
-	// e.GET("/view/clients", func(c echo.Context) error {
-	// 	return templates.Render(c, views.ClientsTempl())
-	// })
 	// e.GET("/api/v1/clients", nil)
 	e.GET("/api/v1/clients/:count/:offset", func(c echo.Context) error {
 		count, _ := strconv.Atoi(c.Param("count"))
@@ -52,7 +51,10 @@ func (s *Server) RegisterRoutes() http.Handler {
 	})
 	// e.GET("/api/v1/client/:id", nil)
 
-	// e.POST("/api/v1/client", nil)
+	e.POST("/api/v1/client", func(c echo.Context) error {
+		values, _ := c.FormParams()
+		return c.JSON(http.StatusOK, values)
+	})
 	// e.DELETE("/api/v1/client/:id", nil)
 
 	return e
