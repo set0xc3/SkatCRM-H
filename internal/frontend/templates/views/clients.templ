@@ -6,7 +6,253 @@ import (
 	_ "SkatCRM-Tiny/internal/frontend/templates/components"
 )
 
+templ clientsFormCreateClientTempl() {
+	<button class="btn" onclick="clients_modal_create_client.showModal()">Создать Клиента</button>
+	<dialog id="clients_modal_create_client" class="modal">
+		<div class="modal-box">
+			<h3 class="text-lg font-bold">Создать Клиента</h3>
+			<!-- tabs -->
+			<div role="tablist" class="tabs tabs-lifted">
+				<input
+					type="radio"
+					name="my_tabs_2"
+					role="tab"
+					class="tab"
+					aria-label="Физ. лицо"
+					checked="checked"
+				/>
+				<div role="tabpanel" class="tab-content bg-base-100 p-6">
+					<form class="space-y-4" id="myForm" hx-post="/api/v1/client" hx-trigger="submit" hx-swap="none">
+						<div>
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">ФИО</legend>
+								<input
+									id="full_name"
+									name="full_name"
+									type="text"
+									placeholder="Иванов Иван Иванович"
+									class="input validator input-bordered w-full max-w-xs"
+									required
+								/>
+							</fieldset>
+						</div>
+						<div>
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Телефон</legend>
+								<input
+									id="phone"
+									name="phone"
+									type="tel"
+									placeholder="+7 (___) ___-__-__"
+									class="input validator tabular-nums input-bordered w-full max-w-xs"
+									pattern="[0-9]*"
+									minlength="10"
+									maxlength="10"
+									required
+								/>
+							</fieldset>
+						</div>
+						<div>
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Адрес</legend>
+								<input
+									id="address"
+									name="address"
+									type="text"
+									placeholder="г. Москва, ул. Ленина, д. 1"
+									class="input validator input-bordered w-full max-w-xs"
+									required
+								/>
+							</fieldset>
+						</div>
+						<div>
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Эл. почта</legend>
+								<input
+									id="email"
+									name="email"
+									type="email"
+									placeholder="ivanov@example.com"
+									class="input validator input-bordered w-full max-w-xs"
+									required
+								/>
+							</fieldset>
+						</div>
+						<div>
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Контрагент</legend>
+								<select name="contractor" class="select validator input-bordered w-full max-w-xs" required>
+									<option disabled selected value="">Не выбран:</option>
+									<option>Empty</option>
+								</select>
+							</fieldset>
+						</div>
+						<div>
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Статус клиента (метка)</legend>
+								<select name="mark" class="select validator input-bordered w-full max-w-xs" required>
+									<option disabled selected value="">Не выбран:</option>
+									<option>Empty</option>
+								</select>
+							</fieldset>
+						</div>
+						<div>
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Рекламный канал (источник)</legend>
+								<select name="ad_channel" class="select validator input-bordered w-full max-w-xs" required>
+									<option disabled selected value="">Не выбран:</option>
+									<option>Empty</option>
+								</select>
+							</fieldset>
+						</div>
+						<div>
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Примечание</legend>
+								<textarea
+									id="note"
+									name="note"
+									rows="3"
+									placeholder="Введите примечание..."
+									class="input input-bordered w-full max-w-xs resize-vertical"
+								></textarea>
+							</fieldset>
+						</div>
+						<div class="modal-action">
+							<button class="btn" type="submit">Создать</button>
+							<button class="btn" type="button" onclick="clients_modal_create_client.close()">Закрыть</button>
+						</div>
+					</form>
+				</div>
+				<input
+					type="radio"
+					name="my_tabs_2"
+					role="tab"
+					class="tab"
+					aria-label="Юр. лицо"
+				/>
+				<div role="tabpanel" class="tab-content bg-base-100 p-6">
+					<form class="space-y-4" id="myForm" hx-post="/api/v1/client" hx-trigger="submit" hx-swap="none">
+						<div>
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Название организации</legend>
+								<input
+									id="name_organization"
+									name="name_organization"
+									type="text"
+									placeholder=""
+									class="input validator input-bordered w-full max-w-xs"
+									required
+								/>
+							</fieldset>
+						</div>
+						<div>
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Телефон</legend>
+								<input
+									id="phone"
+									name="phone"
+									type="tel"
+									placeholder="+7 (___) ___-__-__"
+									class="input validator tabular-nums input-bordered w-full max-w-xs"
+									pattern="[0-9]*"
+									minlength="10"
+									maxlength="10"
+									required
+								/>
+							</fieldset>
+						</div>
+						<div>
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Юридический адрес</legend>
+								<input
+									id="legal_address"
+									name="legal_address"
+									type="text"
+									placeholder=""
+									class="input validator input-bordered w-full max-w-xs"
+									required
+								/>
+							</fieldset>
+						</div>
+						<div>
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Фактический адрес</legend>
+								<input
+									id="physical_address"
+									name="physical_address"
+									type="text"
+									placeholder=""
+									class="input validator input-bordered w-full max-w-xs"
+									required
+								/>
+							</fieldset>
+						</div>
+						<div>
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Эл. почта</legend>
+								<input
+									id="email"
+									name="email"
+									type="email"
+									placeholder="ivanov@example.com"
+									class="input validator input-bordered w-full max-w-xs"
+									required
+								/>
+							</fieldset>
+						</div>
+						<div>
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Контрагент</legend>
+								<select name="contractor" class="select validator input-bordered w-full max-w-xs" required>
+									<option disabled selected value="">Не выбран:</option>
+									<option>Empty</option>
+								</select>
+							</fieldset>
+						</div>
+						<div>
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Статус клиента (метка)</legend>
+								<select name="mark" class="select validator input-bordered w-full max-w-xs" required>
+									<option disabled selected value="">Не выбран:</option>
+									<option>Empty</option>
+								</select>
+							</fieldset>
+						</div>
+						<div>
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Рекламный канал (источник)</legend>
+								<select name="ad_channel" class="select validator input-bordered w-full max-w-xs" required>
+									<option disabled selected value="">Не выбран:</option>
+									<option>Empty</option>
+								</select>
+							</fieldset>
+						</div>
+						<div>
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Примечание</legend>
+								<textarea
+									id="note"
+									name="note"
+									rows="3"
+									placeholder="Введите примечание..."
+									class="input input-bordered w-full max-w-xs resize-vertical"
+								></textarea>
+							</fieldset>
+						</div>
+						<div class="modal-action">
+							<button class="btn" type="submit">Создать</button>
+							<button class="btn" type="button" onclick="clients_modal_create_client.close()">Закрыть</button>
+						</div>
+					</form>
+				</div>
+			</div>
+			<!-- end tabs -->
+		</div>
+	</dialog>
+}
+
 templ ClientsTempl() {
+	@clientsFormCreateClientTempl()
 	<div class="overflow-x-auto">
 		<table class="table-auto w-full text-left">
 			<!-- head -->
