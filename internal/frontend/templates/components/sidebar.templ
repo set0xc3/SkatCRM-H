@@ -2,15 +2,16 @@ package components
 
 templ SidebarTempl(items []SidebarItem) {
 	<aside class="rounded-[5px] w-[150px] min-h-screen bg-white p-[8px] m-0">
-		<ul class="flex flex-col m-0 p-0 gap-[5px]">
+		<ul class="menu flex flex-col m-0 p-0 gap-[5px]">
 			for _, item := range items {
 				<li>
 					<button
-						class={ "bg-[#F0F1F2] py-[5px] flex items-center h-[28px] rounded-[5px] pl-[5px] min-w-full text-sm gap-[8px]" }
+						class="bg-[#F0F1F2] py-[5px] flex items-center h-[28px] rounded-[5px] pl-[5px] min-w-full text-sm gap-[8px]"
 						hx-get={ "/views/" + item.URL }
 						hx-push-url={ "/" + item.URL }
 						hx-swap="innerHTML"
-						hx-target="main"
+						hx-target=".wrap"
+						hx-indicator="#views-lazy-load"
 					>
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={ item.Icon }></path>
@@ -21,4 +22,43 @@ templ SidebarTempl(items []SidebarItem) {
 			}
 		</ul>
 	</aside>
+	<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const aside = document.querySelector('aside');
+  const buttons = aside.querySelectorAll('button');
+  const storageKey = 'page_active';
+  const currentPath = window.location.pathname;
+  const activeId = localStorage.getItem(storageKey);
+
+  if (currentPath != activeId) {
+    window.location.href = activeId;
+  }
+
+  let found = false;
+  buttons.forEach(btn => {
+    if (btn.getAttribute('hx-get') === "/views" + activeId) {
+      console.log(btn.getAttribute('hx-get'));
+      btn.classList.add('active');
+      found = true;
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+
+  // Если запись не найдена – активируем первую кнопку
+  if (!found && buttons.length > 0) {
+    buttons[0].classList.add('active');
+    localStorage.setItem(storageKey, buttons[0].getAttribute('hx-push-url'));
+  }
+
+  // При клике обновляем активную кнопку и сохраняем в localStorage
+  aside.addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    localStorage.setItem(storageKey, btn.getAttribute('hx-push-url'));
+    buttons.forEach(button => button.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+</script>
 }

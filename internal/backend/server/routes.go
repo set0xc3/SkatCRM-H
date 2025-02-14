@@ -3,6 +3,7 @@ package server
 import (
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -32,15 +33,53 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.GET("/", echo.HandlerFunc(s.HelloWorldHandler))
 	e.GET("/websocket", echo.HandlerFunc(s.websocketHandler))
 
-	e.GET("/sandbox", func(c echo.Context) error {
+	e.GET("/", func(c echo.Context) error {
+		return templates.Render(c, templates.LayoutTempl(views.ClientsTempl()))
+	})
+	e.GET("/", func(c echo.Context) error {
 		return templates.Render(c, templates.LayoutTempl(views.SandboxTempl()))
 	})
 	e.GET("/clients", func(c echo.Context) error {
 		return templates.Render(c, templates.LayoutTempl(views.ClientsTempl()))
 	})
+	e.GET("/calls", func(c echo.Context) error {
+		return templates.Render(c, templates.LayoutTempl(views.EmptyTempl()))
+	})
+	e.GET("/orders", func(c echo.Context) error {
+		return templates.Render(c, templates.LayoutTempl(views.EmptyTempl()))
+	})
+	e.GET("/reports", func(c echo.Context) error {
+		return templates.Render(c, templates.LayoutTempl(views.EmptyTempl()))
+	})
+	e.GET("/products", func(c echo.Context) error {
+		return templates.Render(c, templates.LayoutTempl(views.EmptyTempl()))
+	})
+	e.GET("/views/", func(c echo.Context) error {
+		return templates.Render(c, views.SandboxTempl())
+	})
 	e.GET("/views/clients", func(c echo.Context) error {
 		return templates.Render(c, views.ClientsTempl())
 	})
+	e.GET("/views/calls", func(c echo.Context) error {
+		return templates.Render(c, views.EmptyTempl())
+	})
+	e.GET("/views/orders", func(c echo.Context) error {
+		return templates.Render(c, views.EmptyTempl())
+	})
+	e.GET("/views/reports", func(c echo.Context) error {
+		return templates.Render(c, views.EmptyTempl())
+	})
+	e.GET("/views/products", func(c echo.Context) error {
+		return templates.Render(c, views.EmptyTempl())
+	})
+	e.GET("/lazy-load", func(c echo.Context) error {
+		time.Sleep(1 * time.Second)
+		return c.JSON(http.StatusOK, "")
+	})
+	e.GET("/sandbox", func(c echo.Context) error {
+		return templates.Render(c, templates.LayoutTempl(views.SandboxTempl()))
+	})
+
 	// e.GET("/api/v1/clients", nil)
 	e.GET("/api/v1/clients/:count/:offset", func(c echo.Context) error {
 		count, _ := strconv.Atoi(c.Param("count"))

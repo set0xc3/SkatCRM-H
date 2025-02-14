@@ -39,6 +39,28 @@ var sidebarItems = []components.SidebarItem{
 }
 
 templ LayoutTempl(view templ.Component) {
+	<style>
+    .masked-main {
+      position: relative;
+      clip-path: inset(0);
+    }
+
+    #views-lazy-load {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: -1;
+    }
+    #views-lazy-load.htmx-request {
+      z-index: 1000;
+    }
+  </style>
 	<!DOCTYPE html>
 	<html data-theme="light" lang="en">
 		<head>
@@ -52,8 +74,13 @@ templ LayoutTempl(view templ.Component) {
 			<div class="flex flex-1 gap-[2px]">
 				@components.SidebarTempl(sidebarItems)
 				<!-- Main Content -->
-				<main class="bg-base-200 rounded-[5px] flex-1 p-4 gap-[2px] bg-white">
-					@view
+				<main class="bg-base-200 rounded-[5px] flex-1 p-4 gap-[2px] bg-white masked-main">
+					<div id="views-lazy-load" class="htmx-indicator rounded-[5px]">
+						<span class="loading loading-infinity loading-lg text-white"></span>
+					</div>
+					<div class="wrap">
+						@view
+					</div>
 				</main>
 			</div>
 		</body>

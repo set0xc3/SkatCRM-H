@@ -1,8 +1,11 @@
 include .env
 
-.PHONY: all migrations pre-build build run-cli run-server clean
+.PHONY: all tailwind-build migrations pre-build build-all run-cli run-server clean
 
 all: build
+
+tailwind-build:
+	@tailwindcss -o internal/frontend/assets/css/tw.css --minify
 
 migrations:
 	@goose -dir ./migrations/ sqlite3 ${DB_URL} up
@@ -10,16 +13,20 @@ migrations:
 pre-build:
 	@mkdir -p build
 	@tailwindcss -o internal/frontend/assets/css/tw.css --minify
-
-build: pre-build
 	@templ generate
+
+build-all: pre-build
 	@go build -o build/cli cmd/cli/main.go
 	@go build -o build/server cmd/server/main.go
 
-run-cli: build
+run-cli: pre-build
+	@mkdir -p build
+	@templ generate
 	@go run cmd/cli/main.go
 
-run-server: build
+run-server:
+	@mkdir -p build
+	@templ generate
 	@go run cmd/server/main.go
 
 clean:
