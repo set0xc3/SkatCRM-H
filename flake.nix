@@ -16,6 +16,7 @@
     in {
       devShells.default = pkgs.mkShell {
         packages = with pkgs; [
+          nodejs
           tailwindcss
           cobra-cli
           sqlite
