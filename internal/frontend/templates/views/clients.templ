@@ -15,17 +15,17 @@ templ clientsFormCreateClientTempl() {
 			<div role="tablist" class="tabs tabs-lifted">
 				<input
 					type="radio"
-					name="my_tabs_2"
+					name="clients_modal_tab"
 					role="tab"
 					class="tab"
 					aria-label="Физ. лицо"
 					checked="checked"
 				/>
 				<div role="tabpanel" class="tab-content bg-base-100 p-6">
-					<form class="space-y-4" id="myForm" hx-post="/api/v1/client" hx-trigger="submit" hx-swap="none">
+					<form class="space-y-4" id="myForm" hx-post="/api/v1/client" hx-trigger="submit" hx-target=".wrap" hx-swap="innerHTML">
 						<div>
 							<fieldset class="fieldset">
-								<legend class="fieldset-legend">ФИО</legend>
+								<legend class="fieldset-legend">ФИО <span style="color: red;">*</span></legend>
 								<input
 									id="full_name"
 									name="full_name"
@@ -38,16 +38,16 @@ templ clientsFormCreateClientTempl() {
 						</div>
 						<div>
 							<fieldset class="fieldset">
-								<legend class="fieldset-legend">Телефон</legend>
+								<legend class="fieldset-legend">Телефон <span style="color: red;">*</span></legend>
 								<input
-									id="phone"
-									name="phone"
+									id="phones"
+									name="phones"
 									type="tel"
 									placeholder="+7 (___) ___-__-__"
 									class="input validator tabular-nums input-bordered w-full max-w-xs"
-									pattern="[0-9]*"
-									minlength="10"
-									maxlength="10"
+									pattern="^\+\d{10,15}$"
+									minlength="11"
+									maxlength="16"
 									required
 								/>
 							</fieldset>
@@ -56,12 +56,11 @@ templ clientsFormCreateClientTempl() {
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">Адрес</legend>
 								<input
-									id="address"
-									name="address"
+									id="physical_address"
+									name="physical_address"
 									type="text"
 									placeholder="г. Москва, ул. Ленина, д. 1"
 									class="input validator input-bordered w-full max-w-xs"
-									required
 								/>
 							</fieldset>
 						</div>
@@ -74,14 +73,13 @@ templ clientsFormCreateClientTempl() {
 									type="email"
 									placeholder="ivanov@example.com"
 									class="input validator input-bordered w-full max-w-xs"
-									required
 								/>
 							</fieldset>
 						</div>
 						<div>
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">Контрагент</legend>
-								<select name="contractor" class="select validator input-bordered w-full max-w-xs" required>
+								<select name="contractor" class="select validator input-bordered w-full max-w-xs">
 									<option disabled selected value="">Не выбран:</option>
 									<option>Empty</option>
 								</select>
@@ -90,7 +88,7 @@ templ clientsFormCreateClientTempl() {
 						<div>
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">Статус клиента (метка)</legend>
-								<select name="mark" class="select validator input-bordered w-full max-w-xs" required>
+								<select name="mark" class="select validator input-bordered w-full max-w-xs">
 									<option disabled selected value="">Не выбран:</option>
 									<option>Empty</option>
 								</select>
@@ -99,7 +97,7 @@ templ clientsFormCreateClientTempl() {
 						<div>
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">Рекламный канал (источник)</legend>
-								<select name="ad_channel" class="select validator input-bordered w-full max-w-xs" required>
+								<select name="ad_channel" class="select validator input-bordered w-full max-w-xs">
 									<option disabled selected value="">Не выбран:</option>
 									<option>Empty</option>
 								</select>
@@ -121,23 +119,29 @@ templ clientsFormCreateClientTempl() {
 							<button class="btn" type="submit">Создать</button>
 							<button class="btn" type="button" onclick="clients_modal_create_client.close()">Закрыть</button>
 						</div>
+						<input
+							type="hidden"
+							name="type"
+							value={ string(entities.ClientTypePhysical) }
+							style="display: none;"
+						/>
 					</form>
 				</div>
 				<input
 					type="radio"
-					name="my_tabs_2"
+					name="clients_modal_tab"
 					role="tab"
 					class="tab"
 					aria-label="Юр. лицо"
 				/>
 				<div role="tabpanel" class="tab-content bg-base-100 p-6">
-					<form class="space-y-4" id="myForm" hx-post="/api/v1/client" hx-trigger="submit" hx-swap="none">
+					<form class="space-y-4" id="myForm" hx-post="/api/v1/client" hx-trigger="submit" hx-target=".wrap" hx-swap="innerHTML">
 						<div>
 							<fieldset class="fieldset">
-								<legend class="fieldset-legend">Название организации</legend>
+								<legend class="fieldset-legend">Название организации <span style="color: red;">*</span></legend>
 								<input
-									id="name_organization"
-									name="name_organization"
+									id="full_name"
+									name="full_name"
 									type="text"
 									placeholder=""
 									class="input validator input-bordered w-full max-w-xs"
@@ -147,16 +151,16 @@ templ clientsFormCreateClientTempl() {
 						</div>
 						<div>
 							<fieldset class="fieldset">
-								<legend class="fieldset-legend">Телефон</legend>
+								<legend class="fieldset-legend">Телефон <span style="color: red;">*</span></legend>
 								<input
-									id="phone"
-									name="phone"
+									id="phones"
+									name="phones"
 									type="tel"
 									placeholder="+7 (___) ___-__-__"
 									class="input validator tabular-nums input-bordered w-full max-w-xs"
-									pattern="[0-9]*"
-									minlength="10"
-									maxlength="10"
+									pattern="^\+\d{10,15}$"
+									minlength="11"
+									maxlength="16"
 									required
 								/>
 							</fieldset>
@@ -170,7 +174,6 @@ templ clientsFormCreateClientTempl() {
 									type="text"
 									placeholder=""
 									class="input validator input-bordered w-full max-w-xs"
-									required
 								/>
 							</fieldset>
 						</div>
@@ -183,7 +186,6 @@ templ clientsFormCreateClientTempl() {
 									type="text"
 									placeholder=""
 									class="input validator input-bordered w-full max-w-xs"
-									required
 								/>
 							</fieldset>
 						</div>
@@ -196,14 +198,13 @@ templ clientsFormCreateClientTempl() {
 									type="email"
 									placeholder="ivanov@example.com"
 									class="input validator input-bordered w-full max-w-xs"
-									required
 								/>
 							</fieldset>
 						</div>
 						<div>
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">Контрагент</legend>
-								<select name="contractor" class="select validator input-bordered w-full max-w-xs" required>
+								<select name="contractor" class="select validator input-bordered w-full max-w-xs">
 									<option disabled selected value="">Не выбран:</option>
 									<option>Empty</option>
 								</select>
@@ -212,7 +213,7 @@ templ clientsFormCreateClientTempl() {
 						<div>
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">Статус клиента (метка)</legend>
-								<select name="mark" class="select validator input-bordered w-full max-w-xs" required>
+								<select name="mark" class="select validator input-bordered w-full max-w-xs">
 									<option disabled selected value="">Не выбран:</option>
 									<option>Empty</option>
 								</select>
@@ -221,7 +222,7 @@ templ clientsFormCreateClientTempl() {
 						<div>
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">Рекламный канал (источник)</legend>
-								<select name="ad_channel" class="select validator input-bordered w-full max-w-xs" required>
+								<select name="ad_channel" class="select validator input-bordered w-full max-w-xs">
 									<option disabled selected value="">Не выбран:</option>
 									<option>Empty</option>
 								</select>
@@ -243,6 +244,12 @@ templ clientsFormCreateClientTempl() {
 							<button class="btn" type="submit">Создать</button>
 							<button class="btn" type="button" onclick="clients_modal_create_client.close()">Закрыть</button>
 						</div>
+						<input
+							type="hidden"
+							name="type"
+							value={ string(entities.ClientTypeLegal) }
+							style="display: none;"
+						/>
 					</form>
 				</div>
 			</div>
@@ -268,7 +275,7 @@ templ ClientsTempl() {
 					<th class="px-4 py-2">Действия</th>
 				</tr>
 			</thead>
-			<tbody hx-confirm="Вы уверены?" hx-target="closest tr">
+			<tbody hx-confirm="Вы уверены?" hx-target="closest tr" hx-swap="outerHTML">
 				{{ count := 10 }}
 				{{ offset := 0 }}
 				{{ clients, _ := api.FetchEntities[entities.ClientInfo]("/api/v1/clients", count, offset) }}
@@ -288,6 +295,5 @@ templ ClientsTempl() {
 				}
 			</tbody>
 		</table>
-		<!-- @components.Pagination(currPage, clientCount, "clients") -->
 	</div>
 }

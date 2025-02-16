@@ -3,28 +3,40 @@ package entities
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"strings"
 )
 
+type ClientType string
+
+const (
+	ClientTypePhysical     ClientType = "Физ. лицо"
+	ClientTypeLegal        ClientType = "Юр. лицо"
+	ClientTypeSupplier     ClientType = "Поставщик"
+	ClientTypeEmployee     ClientType = "Сотрудник"
+	ClientTypeCounterparty ClientType = "Контрагент"
+	ClientTypeCustomer     ClientType = "Покупатель"
+)
+
 type ClientInfo struct {
-	Id               string `db:"id" json:"id"`
-	Id2              string `db:"id2" json:"id2"`
-	Mark             string `db:"mark" json:"mark"`
-	Contractor       string `db:"contractor" json:"contractor"`
-	FullName         string `db:"full_name" json:"full_name"`
-	Type             string `db:"type" json:"type"`
-	Phones           string `db:"phones" json:"phones"`
-	Email            string `db:"email" json:"email"`
-	LegalAddress     string `db:"legal_address" json:"legal_address"`
-	PhysicalAddress  string `db:"physical_address" json:"physical_address"`
-	RegistrationDate string `db:"registration_date" json:"registration_date"`
-	AdChannel        string `db:"ad_channel" json:"ad_channel"`
-	RegData1         string `db:"reg_data_1" json:"reg_data_1"`
-	RegData2         string `db:"reg_data_2" json:"reg_data_2"`
-	Note             string `db:"note" json:"note"`
-	RequestCount     string `db:"request_count" json:"request_count"`
-	Birthday         string `db:"birthday" json:"birthday"`
-	Income           string `db:"income" json:"income"`
+	Id               string     `db:"id" json:"id" form:"id"`
+	Id2              string     `db:"id2" json:"id2" form:"id2"`
+	Mark             string     `db:"mark" json:"mark" form:"mark"`
+	Contractor       string     `db:"contractor" json:"contractor" form:"contractor"`
+	FullName         string     `db:"full_name" json:"full_name" form:"full_name"`
+	Type             ClientType `db:"type" json:"type" form:"type"`
+	Phones           string     `db:"phones" json:"phones" form:"phones"`
+	Email            string     `db:"email" json:"email" form:"email"`
+	LegalAddress     string     `db:"legal_address" json:"legal_address" form:"legal_address"`
+	PhysicalAddress  string     `db:"physical_address" json:"physical_address" form:"physical_address"`
+	RegistrationDate string     `db:"registration_date" json:"registration_date" form:"registration_date"`
+	AdChannel        string     `db:"ad_channel" json:"ad_channel" form:"ad_channel"`
+	RegData1         string     `db:"reg_data_1" json:"reg_data_1" form:"reg_data_1"`
+	RegData2         string     `db:"reg_data_2" json:"reg_data_2" form:"reg_data_2"`
+	Note             string     `db:"note" json:"note" form:"note"`
+	RequestCount     string     `db:"request_count" json:"request_count" form:"request_count"`
+	Birthday         string     `db:"birthday" json:"birthday" form:"birthday"`
+	Income           string     `db:"income" json:"income" form:"income"`
 }
 
 type ClientEntity struct {
@@ -99,13 +111,17 @@ func (r *ClientEntity) FetchClientByID(id string) (*ClientInfo, error) {
 }
 
 func (r *ClientEntity) InsertClient(client ClientInfo) error {
+	var err error
+
 	existsQuery := "SELECT id FROM clients WHERE id = ?"
 	var existingID string
-	err := r.db.QueryRow(existsQuery, client.Id, client.Email).Scan(&existingID)
+	err = r.db.QueryRow(existsQuery, client.Id).Scan(&existingID)
+	if err == nil {
+		// Клиент найден.
+		return fmt.Errorf("client with id %s already exists", client.Id)
+	}
 	if err != sql.ErrNoRows {
-		if err == nil {
-			return fmt.Errorf("client with id %s or email %s already exists", client.Id, client.Email)
-		}
+		// Произошла другая ошибка.
 		return fmt.Errorf("failed to check if client exists: %w", err)
 	}
 
@@ -125,6 +141,7 @@ func (r *ClientEntity) InsertClient(client ClientInfo) error {
 		client.Birthday, client.Income,
 	)
 	if err != nil {
+		log.Printf("Ошибка при выполнении запроса: %v", err)
 		return fmt.Errorf("failed to insert client: %w", err)
 	}
 

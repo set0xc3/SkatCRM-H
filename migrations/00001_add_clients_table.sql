@@ -7,7 +7,7 @@ CREATE TABLE clients (
   full_name TEXT, -- Полное имя клиента
   type TEXT, -- Тип клиента
   phones TEXT, -- Номера телефонов (можно хранить как JSON или строку)
-  email TEXT UNIQUE, -- Email клиента (уникальное поле)
+  email TEXT, -- Email клиента (уникальное поле)
   legal_address TEXT, -- Юридический адрес
   physical_address TEXT, -- Физический адрес
   registration_date TEXT, -- Дата регистрации

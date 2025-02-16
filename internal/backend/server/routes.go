@@ -1,14 +1,16 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
-	"time"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
 	"SkatCRM-Tiny/internal/backend/database"
+	"SkatCRM-Tiny/internal/backend/database/entities"
 	"SkatCRM-Tiny/internal/frontend"
 	"SkatCRM-Tiny/internal/frontend/templates"
 	"SkatCRM-Tiny/internal/frontend/templates/views"
@@ -34,53 +36,60 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.GET("/websocket", echo.HandlerFunc(s.websocketHandler))
 
 	e.GET("/", func(c echo.Context) error {
-		return templates.Render(c, templates.LayoutTempl(views.ClientsTempl()))
-	})
-	e.GET("/", func(c echo.Context) error {
+		// time.Sleep(1 * time.Second)
 		return templates.Render(c, templates.LayoutTempl(views.SandboxTempl()))
 	})
 	e.GET("/clients", func(c echo.Context) error {
+		// time.Sleep(1 * time.Second)
 		return templates.Render(c, templates.LayoutTempl(views.ClientsTempl()))
 	})
 	e.GET("/calls", func(c echo.Context) error {
+		// time.Sleep(1 * time.Second)
 		return templates.Render(c, templates.LayoutTempl(views.EmptyTempl()))
 	})
 	e.GET("/orders", func(c echo.Context) error {
+		// time.Sleep(1 * time.Second)
 		return templates.Render(c, templates.LayoutTempl(views.EmptyTempl()))
 	})
 	e.GET("/reports", func(c echo.Context) error {
+		// time.Sleep(1 * time.Second)
 		return templates.Render(c, templates.LayoutTempl(views.EmptyTempl()))
 	})
 	e.GET("/products", func(c echo.Context) error {
 		return templates.Render(c, templates.LayoutTempl(views.EmptyTempl()))
 	})
 	e.GET("/views/", func(c echo.Context) error {
+		// time.Sleep(1 * time.Second)
 		return templates.Render(c, views.SandboxTempl())
 	})
 	e.GET("/views/clients", func(c echo.Context) error {
+		// time.Sleep(1 * time.Second)
 		return templates.Render(c, views.ClientsTempl())
 	})
 	e.GET("/views/calls", func(c echo.Context) error {
+		// time.Sleep(1 * time.Second)
 		return templates.Render(c, views.EmptyTempl())
 	})
 	e.GET("/views/orders", func(c echo.Context) error {
+		// time.Sleep(1 * time.Second)
 		return templates.Render(c, views.EmptyTempl())
 	})
 	e.GET("/views/reports", func(c echo.Context) error {
+		// time.Sleep(1 * time.Second)
 		return templates.Render(c, views.EmptyTempl())
 	})
 	e.GET("/views/products", func(c echo.Context) error {
+		// time.Sleep(1 * time.Second)
 		return templates.Render(c, views.EmptyTempl())
 	})
 	e.GET("/lazy-load", func(c echo.Context) error {
-		time.Sleep(1 * time.Second)
+		// time.Sleep(1 * time.Second)
 		return c.JSON(http.StatusOK, "")
 	})
 	e.GET("/sandbox", func(c echo.Context) error {
 		return templates.Render(c, templates.LayoutTempl(views.SandboxTempl()))
 	})
 
-	// e.GET("/api/v1/clients", nil)
 	e.GET("/api/v1/clients/:count/:offset", func(c echo.Context) error {
 		count, _ := strconv.Atoi(c.Param("count"))
 		offset, _ := strconv.Atoi(c.Param("offset"))
@@ -91,10 +100,29 @@ func (s *Server) RegisterRoutes() http.Handler {
 	// e.GET("/api/v1/client/:id", nil)
 
 	e.POST("/api/v1/client", func(c echo.Context) error {
-		values, _ := c.FormParams()
-		return c.JSON(http.StatusOK, values)
+		client := new(entities.ClientInfo)
+		if err := c.Bind(client); err != nil {
+			return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+		}
+
+		client.Id = uuid.NewString()
+		err := database.GetInstance().GetClients().InsertClient(*client)
+		if err != nil {
+			return fmt.Errorf("Failed insert client: %s", err)
+		}
+
+		return templates.Render(c, views.ClientsTempl())
 	})
-	// e.DELETE("/api/v1/client/:id", nil)
+	e.DELETE("/api/v1/client/:id", func(c echo.Context) error {
+		id := c.Param("id")
+
+		err := database.GetInstance().GetClients().DeleteClient(id)
+		if err != nil {
+			return fmt.Errorf("Failed delete client: %s", err)
+		}
+
+		return c.NoContent(http.StatusOK)
+	})
 
 	return e
 }
