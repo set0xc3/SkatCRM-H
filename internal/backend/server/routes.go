@@ -37,26 +37,26 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	e.GET("/", func(c echo.Context) error {
 		// time.Sleep(1 * time.Second)
-		return templates.Render(c, templates.LayoutTempl(views.SandboxTempl()))
+		return templates.Render(c, templates.LayoutTempl(c.Request().URL.Path, views.SandboxTempl()))
 	})
 	e.GET("/clients", func(c echo.Context) error {
 		// time.Sleep(1 * time.Second)
-		return templates.Render(c, templates.LayoutTempl(views.ClientsTempl()))
+		return templates.Render(c, templates.LayoutTempl(c.Request().URL.Path, views.ClientsTempl()))
 	})
 	e.GET("/calls", func(c echo.Context) error {
 		// time.Sleep(1 * time.Second)
-		return templates.Render(c, templates.LayoutTempl(views.EmptyTempl()))
+		return templates.Render(c, templates.LayoutTempl(c.Request().URL.Path, views.EmptyTempl()))
 	})
 	e.GET("/orders", func(c echo.Context) error {
 		// time.Sleep(1 * time.Second)
-		return templates.Render(c, templates.LayoutTempl(views.EmptyTempl()))
+		return templates.Render(c, templates.LayoutTempl(c.Request().URL.Path, views.EmptyTempl()))
 	})
 	e.GET("/reports", func(c echo.Context) error {
 		// time.Sleep(1 * time.Second)
-		return templates.Render(c, templates.LayoutTempl(views.EmptyTempl()))
+		return templates.Render(c, templates.LayoutTempl(c.Request().URL.Path, views.EmptyTempl()))
 	})
 	e.GET("/products", func(c echo.Context) error {
-		return templates.Render(c, templates.LayoutTempl(views.EmptyTempl()))
+		return templates.Render(c, templates.LayoutTempl(c.Request().URL.Path, views.EmptyTempl()))
 	})
 	e.GET("/views/", func(c echo.Context) error {
 		// time.Sleep(1 * time.Second)
@@ -87,7 +87,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 		return c.JSON(http.StatusOK, "")
 	})
 	e.GET("/sandbox", func(c echo.Context) error {
-		return templates.Render(c, templates.LayoutTempl(views.SandboxTempl()))
+		return templates.Render(c, templates.LayoutTempl(c.Request().URL.Path, views.SandboxTempl()))
 	})
 
 	e.GET("/api/v1/clients/:count/:offset", func(c echo.Context) error {

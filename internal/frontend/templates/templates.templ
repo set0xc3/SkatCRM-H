@@ -38,7 +38,7 @@ var sidebarItems = []components.SidebarItem{
 	},
 }
 
-templ LayoutTempl(view templ.Component) {
+templ LayoutTempl(url string, view templ.Component) {
 	<style>
     .masked-main {
       position: relative;
@@ -72,7 +72,7 @@ templ LayoutTempl(view templ.Component) {
 		<body hx-boost="true" class="flex flex-col h-full gap-[2px] bg-[#CDD2D6]">
 			@components.NavbarTempl()
 			<div class="flex flex-1 gap-[2px]">
-				@components.SidebarTempl(sidebarItems)
+				@components.SidebarTempl(url, sidebarItems)
 				<!-- Main Content -->
 				<main class="bg-base-200 rounded-[5px] flex-1 p-4 gap-[2px] bg-white masked-main">
 					<div id="views-lazy-load" class="htmx-indicator rounded-[5px]">

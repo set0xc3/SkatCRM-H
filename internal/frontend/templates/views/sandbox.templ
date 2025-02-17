@@ -1,10 +1,28 @@
 package views
 
 templ SandboxTempl() {
-	// <div>
-	// 	<button hx-get="/lazy-load" hx-indicator="#views-lazy-load" hx-trigger="click">
-	// 		Post It!
-	// 	</button>
-	// 	<span id="views-lazy-load" class="htmx-indicator loading loading-infinity loading-lg"></span>
-	// </div>
+	<div class="max-w-md mx-auto space-y-4">
+		<h1 class="text-xl font-bold">Key-Value Pairs</h1>
+		<!-- Форма добавления новой пары -->
+		<form
+			hx-post="/add-row"
+			hx-target="#rows"
+			hx-swap="beforeend"
+			class="flex items-center space-x-2"
+		>
+			<input
+				name="key"
+				placeholder="Variable"
+				class="input input-bordered w-1/2"
+			/>
+			<input
+				name="value"
+				placeholder="Value"
+				class="input input-bordered w-1/2"
+			/>
+			<button class="btn btn-primary">Add</button>
+		</form>
+		<!-- Сюда будут вставляться новые строки -->
+		<div id="rows" class="space-y-2"></div>
+	</div>
 }
