@@ -1,8 +1,4 @@
 -- +goose Up
-CREATE TABLE IF NOT EXISTS calls (
-  id TEXT PRIMARY KEY, -- Уникальный идентификатор звонка
-  id2 TEXT -- Дополнительный идентификатор
-);
-
+-- CREATE TABLE IF NOT EXISTS calls (id TEXT PRIMARY KEY, id2 TEXT);
 -- +goose Down
-DROP TABLE calls;
+-- DROP TABLE calls;

@@ -124,5 +124,15 @@ func (s *Server) RegisterRoutes() http.Handler {
 		return c.NoContent(http.StatusOK)
 	})
 
+	e.GET("/api/v1/marks", func(c echo.Context) error {
+		// var marks []string
+		// if err := c.Bind(marks); err != nil {
+		// 	return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+		// }
+
+		marks, _ := database.GetInstance().FetchMarks()
+		return c.JSON(http.StatusOK, marks)
+	})
+
 	return e
 }

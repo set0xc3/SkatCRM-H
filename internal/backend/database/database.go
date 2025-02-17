@@ -41,24 +41,24 @@ func GetInstance() *Database {
 	return instance
 }
 
-func (db *Database) Init() error {
+func (ctx *Database) Init() error {
 	dbURL := os.Getenv("DB_URL")
 	if dbURL == "" {
 		return fmt.Errorf("DB_URL environment variable is not set")
 	}
 
 	var err error
-	db.db, err = sql.Open("sqlite3", dbURL)
+	ctx.db, err = sql.Open("sqlite3", dbURL)
 	if err != nil {
 		return fmt.Errorf("failed to open database: %w", err)
 	}
 
-	if err := db.db.Ping(); err != nil {
-		db.db.Close()
+	if err := ctx.db.Ping(); err != nil {
+		ctx.db.Close()
 		return fmt.Errorf("failed to connect to database: %w", err)
 	}
 
-	db.clientsEnt = entities.NewClientEntity(db.db, dbURL)
+	ctx.clientsEnt = entities.NewClientEntity(ctx.db, dbURL)
 	// db.productsEnt = entities.NewProductEntity(db.db, dbURL)
 	// db.callsEnt = entities.NewCallEntity(db.db, dbURL)
 
@@ -66,13 +66,44 @@ func (db *Database) Init() error {
 	return nil
 }
 
-func (db *Database) Close() error {
-	if db.db != nil {
-		return db.db.Close()
+func (ctx *Database) Close() error {
+	if ctx.db != nil {
+		return ctx.db.Close()
 	}
 	return nil
 }
 
-func (db *Database) GetClients() *entities.ClientEntity {
-	return db.clientsEnt
+func (ctx *Database) GetClients() *entities.ClientEntity {
+	return ctx.clientsEnt
+}
+
+func (ctx *Database) FetchMarks() ([]string, error) {
+	query := `
+      SELECT id, name
+      FROM marks
+  `
+	rows, err := ctx.db.Query(query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute query: %w", err)
+	}
+	defer rows.Close()
+
+	var marks []string
+
+	for rows.Next() {
+		var id string
+		var name string
+
+		if err := rows.Scan(&id, &name); err != nil {
+			return nil, fmt.Errorf("failed to scan row: %w", err)
+		}
+
+		marks = append(marks, name)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error during iteration: %w", err)
+	}
+
+	return marks, nil
 }

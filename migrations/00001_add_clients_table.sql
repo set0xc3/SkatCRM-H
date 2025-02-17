@@ -1,22 +1,22 @@
 -- +goose Up
 CREATE TABLE clients (
-  id TEXT PRIMARY KEY, -- Уникальный идентификатор клиента
-  id2 TEXT, -- Дополнительный идентификатор
-  mark TEXT, -- Метка или отметка
-  contractor TEXT, -- Контрагент
-  full_name TEXT, -- Полное имя клиента
-  type TEXT, -- Тип клиента
-  phones TEXT, -- Номера телефонов (можно хранить как JSON или строку)
-  email TEXT, -- Email клиента (уникальное поле)
-  legal_address TEXT, -- Юридический адрес
-  physical_address TEXT, -- Физический адрес
-  registration_date TEXT, -- Дата регистрации
-  ad_channel TEXT, -- Канал рекламы
-  reg_data_1 TEXT, -- Дополнительные данные регистрации 1
-  reg_data_2 TEXT, -- Дополнительные данные регистрации 2
-  note TEXT, -- Примечания
-  request_count TEXT, -- Количество запросов
-  birthday TEXT, -- День рождения
+  id TEXT PRIMARY KEY,
+  id2 TEXT,
+  mark TEXT,
+  contractor TEXT,
+  full_name TEXT,
+  type TEXT,
+  phones TEXT,
+  email TEXT,
+  legal_address TEXT,
+  physical_address TEXT,
+  registration_date TEXT,
+  ad_channel TEXT,
+  reg_data_1 TEXT,
+  reg_data_2 TEXT,
+  note TEXT,
+  request_count TEXT,
+  birthday TEXT,
   income TEXT -- Доход
 );
 

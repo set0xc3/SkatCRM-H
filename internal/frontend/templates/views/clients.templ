@@ -1,12 +1,15 @@
 package views
 
 import (
+	"strconv"
+
 	"SkatCRM-Tiny/internal/backend/api"
 	"SkatCRM-Tiny/internal/backend/database/entities"
 	_ "SkatCRM-Tiny/internal/frontend/templates/components"
 )
 
 templ clientsFormCreateClientTempl() {
+	{{ marks, _ := api.Fetch[string]("/api/v1/marks") }}
 	<button class="btn" onclick="openClientModal()">Создать Клиента</button>
 	<dialog id="clients_modal_create_client" class="modal">
 		<div class="modal-box">
@@ -89,7 +92,9 @@ templ clientsFormCreateClientTempl() {
 								<legend class="fieldset-legend">Статус клиента (метка)</legend>
 								<select name="mark" class="select validator input-bordered w-full max-w-xs">
 									<option disabled selected value="">Не выбран:</option>
-									<option>Empty</option>
+									for _, mark := range marks {
+										<option>{ mark }</option>
+									}
 								</select>
 							</fieldset>
 						</div>
@@ -214,7 +219,9 @@ templ clientsFormCreateClientTempl() {
 								<legend class="fieldset-legend">Статус клиента (метка)</legend>
 								<select name="mark" class="select validator input-bordered w-full max-w-xs">
 									<option disabled selected value="">Не выбран:</option>
-									<option>Empty</option>
+									for _, mark := range marks {
+										<option>{ mark }</option>
+									}
 								</select>
 							</fieldset>
 						</div>
@@ -299,7 +306,7 @@ templ ClientsTempl() {
 			<tbody hx-confirm="Вы уверены?" hx-target="closest tr" hx-swap="outerHTML">
 				{{ count := 10 }}
 				{{ offset := 0 }}
-				{{ clients, _ := api.FetchEntities[entities.ClientInfo]("/api/v1/clients", count, offset) }}
+				{{ clients, _ := api.Fetch[entities.ClientInfo]("/api/v1/clients/" + strconv.Itoa(count) + "/" + strconv.Itoa(offset)) }}
 				for _, client := range clients {
 					<tr>
 						<td>{ client.Id }</td>
