@@ -107,3 +107,34 @@ func (ctx *Database) FetchMarks() ([]string, error) {
 
 	return marks, nil
 }
+
+func (ctx *Database) FetchAdChannels() ([]string, error) {
+	query := `
+      SELECT id, name
+      FROM ad_channels
+  `
+	rows, err := ctx.db.Query(query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute query: %w", err)
+	}
+	defer rows.Close()
+
+	var ad_channels []string
+
+	for rows.Next() {
+		var id string
+		var name string
+
+		if err := rows.Scan(&id, &name); err != nil {
+			return nil, fmt.Errorf("failed to scan row: %w", err)
+		}
+
+		ad_channels = append(ad_channels, name)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error during iteration: %w", err)
+	}
+
+	return ad_channels, nil
+}

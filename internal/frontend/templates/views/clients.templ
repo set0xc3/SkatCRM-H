@@ -10,6 +10,7 @@ import (
 
 templ clientsFormCreateClientTempl() {
 	{{ marks, _ := api.Fetch[string]("/api/v1/marks") }}
+	{{ ad_channels, _ := api.Fetch[string]("/api/v1/ad_channels") }}
 	<button class="btn" onclick="openClientModal()">Создать Клиента</button>
 	<dialog id="clients_modal_create_client" class="modal">
 		<div class="modal-box">
@@ -103,7 +104,9 @@ templ clientsFormCreateClientTempl() {
 								<legend class="fieldset-legend">Рекламный канал (источник)</legend>
 								<select name="ad_channel" class="select validator input-bordered w-full max-w-xs">
 									<option disabled selected value="">Не выбран:</option>
-									<option>Empty</option>
+									for _, ad_channel := range ad_channels {
+										<option>{ ad_channel }</option>
+									}
 								</select>
 							</fieldset>
 						</div>
@@ -230,7 +233,9 @@ templ clientsFormCreateClientTempl() {
 								<legend class="fieldset-legend">Рекламный канал (источник)</legend>
 								<select name="ad_channel" class="select validator input-bordered w-full max-w-xs">
 									<option disabled selected value="">Не выбран:</option>
-									<option>Empty</option>
+									for _, ad_channel := range ad_channels {
+										<option>{ ad_channel }</option>
+									}
 								</select>
 							</fieldset>
 						</div>
