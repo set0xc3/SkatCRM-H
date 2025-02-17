@@ -7,11 +7,10 @@ import (
 )
 
 templ clientsFormCreateClientTempl() {
-	<button class="btn" onclick="clients_modal_create_client.showModal()">Создать Клиента</button>
+	<button class="btn" onclick="openClientModal()">Создать Клиента</button>
 	<dialog id="clients_modal_create_client" class="modal">
 		<div class="modal-box">
 			<h3 class="text-lg font-bold">Создать Клиента</h3>
-			<!-- tabs -->
 			<div role="tablist" class="tabs tabs-lifted">
 				<input
 					type="radio"
@@ -117,7 +116,7 @@ templ clientsFormCreateClientTempl() {
 						</div>
 						<div class="modal-action">
 							<button class="btn" type="submit">Создать</button>
-							<button class="btn" type="button" onclick="clients_modal_create_client.close()">Закрыть</button>
+							<button class="btn" type="button" onclick="closeClientModal()">Закрыть</button>
 						</div>
 						<input
 							type="hidden"
@@ -242,7 +241,7 @@ templ clientsFormCreateClientTempl() {
 						</div>
 						<div class="modal-action">
 							<button class="btn" type="submit">Создать</button>
-							<button class="btn" type="button" onclick="clients_modal_create_client.close()">Закрыть</button>
+							<button class="btn" type="button" onclick="closeClientModal()">Закрыть</button>
 						</div>
 						<input
 							type="hidden"
@@ -253,9 +252,31 @@ templ clientsFormCreateClientTempl() {
 					</form>
 				</div>
 			</div>
-			<!-- end tabs -->
 		</div>
 	</dialog>
+	<script>
+	  function resetModalForm() {
+      const modal = document.getElementById('clients_modal_create_client');
+      if (modal) {
+        modal.querySelectorAll('form').forEach(form => form.reset());
+        const defaultTab = modal.querySelector('input[aria-label="Физ. лицо"]');
+        if (defaultTab) {
+          defaultTab.checked = true;
+        }
+      }
+    }
+
+    function openClientModal() {
+      const modal = document.getElementById('clients_modal_create_client');
+      resetModalForm();
+      modal.showModal();
+    }
+
+    function closeClientModal() {
+      const modal = document.getElementById('clients_modal_create_client');
+      modal.close();
+    }
+  </script>
 }
 
 templ ClientsTempl() {
