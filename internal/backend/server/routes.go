@@ -12,6 +12,7 @@ import (
 	"SkatCRM-Tiny/internal/backend/database"
 	"SkatCRM-Tiny/internal/backend/database/entities"
 	"SkatCRM-Tiny/internal/frontend"
+	"SkatCRM-Tiny/internal/frontend/app"
 	"SkatCRM-Tiny/internal/frontend/templates"
 	"SkatCRM-Tiny/internal/frontend/templates/views"
 )
@@ -36,50 +37,67 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.GET("/websocket", echo.HandlerFunc(s.websocketHandler))
 
 	e.GET("/", func(c echo.Context) error {
-		// time.Sleep(1 * time.Second)
-		return templates.Render(c, templates.LayoutTempl(c.Request().URL.Path, views.SandboxTempl()))
+		app.CurrentUrlPath = c.Request().URL.Path
+		return templates.Render(c, templates.LayoutTempl(views.SandboxTempl()))
 	})
 	e.GET("/clients", func(c echo.Context) error {
-		// time.Sleep(1 * time.Second)
-		return templates.Render(c, templates.LayoutTempl(c.Request().URL.Path, views.ClientsTempl()))
+		page, _ := strconv.Atoi(c.QueryParam("page"))
+		app.CurrentPageIdx = page
+		app.CurrentUrlPath = c.Request().URL.Path
+		return templates.Render(c, templates.LayoutTempl(views.ClientsTempl()))
 	})
 	e.GET("/calls", func(c echo.Context) error {
-		// time.Sleep(1 * time.Second)
-		return templates.Render(c, templates.LayoutTempl(c.Request().URL.Path, views.EmptyTempl()))
+		page, _ := strconv.Atoi(c.QueryParam("page"))
+		app.CurrentPageIdx = page
+		app.CurrentUrlPath = c.Request().URL.Path
+		return templates.Render(c, templates.LayoutTempl(views.EmptyTempl()))
 	})
 	e.GET("/orders", func(c echo.Context) error {
-		// time.Sleep(1 * time.Second)
-		return templates.Render(c, templates.LayoutTempl(c.Request().URL.Path, views.EmptyTempl()))
+		page, _ := strconv.Atoi(c.QueryParam("page"))
+		app.CurrentPageIdx = page
+		app.CurrentUrlPath = c.Request().URL.Path
+		return templates.Render(c, templates.LayoutTempl(views.EmptyTempl()))
 	})
 	e.GET("/reports", func(c echo.Context) error {
-		// time.Sleep(1 * time.Second)
-		return templates.Render(c, templates.LayoutTempl(c.Request().URL.Path, views.EmptyTempl()))
+		page, _ := strconv.Atoi(c.QueryParam("page"))
+		app.CurrentPageIdx = page
+		app.CurrentUrlPath = c.Request().URL.Path
+		return templates.Render(c, templates.LayoutTempl(views.EmptyTempl()))
 	})
 	e.GET("/products", func(c echo.Context) error {
-		return templates.Render(c, templates.LayoutTempl(c.Request().URL.Path, views.EmptyTempl()))
+		page, _ := strconv.Atoi(c.QueryParam("page"))
+		app.CurrentPageIdx = page
+		app.CurrentUrlPath = c.Request().URL.Path
+		return templates.Render(c, templates.LayoutTempl(views.EmptyTempl()))
 	})
 	e.GET("/views/", func(c echo.Context) error {
-		// time.Sleep(1 * time.Second)
+		page, _ := strconv.Atoi(c.QueryParam("page"))
+		app.CurrentPageIdx = page
 		return templates.Render(c, views.SandboxTempl())
 	})
 	e.GET("/views/clients", func(c echo.Context) error {
-		// time.Sleep(1 * time.Second)
+		page, _ := strconv.Atoi(c.QueryParam("page"))
+		app.CurrentPageIdx = page
 		return templates.Render(c, views.ClientsTempl())
 	})
 	e.GET("/views/calls", func(c echo.Context) error {
-		// time.Sleep(1 * time.Second)
+		page, _ := strconv.Atoi(c.QueryParam("page"))
+		app.CurrentPageIdx = page
 		return templates.Render(c, views.EmptyTempl())
 	})
 	e.GET("/views/orders", func(c echo.Context) error {
-		// time.Sleep(1 * time.Second)
+		page, _ := strconv.Atoi(c.QueryParam("page"))
+		app.CurrentPageIdx = page
 		return templates.Render(c, views.EmptyTempl())
 	})
 	e.GET("/views/reports", func(c echo.Context) error {
-		// time.Sleep(1 * time.Second)
+		page, _ := strconv.Atoi(c.QueryParam("page"))
+		app.CurrentPageIdx = page
 		return templates.Render(c, views.EmptyTempl())
 	})
 	e.GET("/views/products", func(c echo.Context) error {
-		// time.Sleep(1 * time.Second)
+		page, _ := strconv.Atoi(c.QueryParam("page"))
+		app.CurrentPageIdx = page
 		return templates.Render(c, views.EmptyTempl())
 	})
 	e.GET("/lazy-load", func(c echo.Context) error {
@@ -87,9 +105,13 @@ func (s *Server) RegisterRoutes() http.Handler {
 		return c.JSON(http.StatusOK, "")
 	})
 	e.GET("/sandbox", func(c echo.Context) error {
-		return templates.Render(c, templates.LayoutTempl(c.Request().URL.Path, views.SandboxTempl()))
+		return templates.Render(c, templates.LayoutTempl(views.SandboxTempl()))
 	})
 
+	e.GET("/api/v1/clients", func(c echo.Context) error {
+		count, _ := database.GetInstance().GetClients().FetchClientsCount()
+		return c.JSON(http.StatusOK, count)
+	})
 	e.GET("/api/v1/clients/:count/:offset", func(c echo.Context) error {
 		count, _ := strconv.Atoi(c.Param("count"))
 		offset, _ := strconv.Atoi(c.Param("offset"))

@@ -198,3 +198,13 @@ func (r *ClientEntity) UpdateClient(id string, updates map[string]interface{}) e
 
 	return nil
 }
+
+func (r *ClientEntity) FetchClientsCount() (int, error) {
+	var count int
+	query := "SELECT COUNT(*) FROM clients"
+	err := r.db.QueryRow(query).Scan(&count)
+	if err != nil {
+		return 0, fmt.Errorf("failed to fetch count: %w", err)
+	}
+	return count, nil
+}

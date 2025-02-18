@@ -20,6 +20,15 @@ func FetchData[T any](url string, data *T) error {
 	return json.NewDecoder(resp.Body).Decode(data)
 }
 
+func FetchOne[T any](params string) (data T, err error) {
+	url := params
+	err = FetchData(url, &data)
+	if err != nil {
+		return data, err
+	}
+	return data, nil
+}
+
 func Fetch[T any](params string) (data []T, err error) {
 	url := params
 	err = FetchData(url, &data)
