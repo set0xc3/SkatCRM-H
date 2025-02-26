@@ -6,6 +6,7 @@ import (
 
 	"SkatCRM-Tiny/internal/frontend/app"
 	"SkatCRM-Tiny/internal/backend/api"
+	"SkatCRM-Tiny/internal/backend/database"
 	"SkatCRM-Tiny/internal/backend/database/entities"
 	_ "SkatCRM-Tiny/internal/frontend/templates/components"
 )
@@ -41,7 +42,6 @@ templ clientsFormCreateClientTempl() {
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">ФИО <span style="color: red;">*</span></legend>
 								<input
-									id="full_name"
 									name="full_name"
 									type="text"
 									placeholder="Иванов Иван Иванович"
@@ -54,7 +54,6 @@ templ clientsFormCreateClientTempl() {
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">Телефон <span style="color: red;">*</span></legend>
 								<input
-									id="phones"
 									name="phones"
 									type="tel"
 									placeholder="+7 (___) ___-__-__"
@@ -70,7 +69,6 @@ templ clientsFormCreateClientTempl() {
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">Адрес</legend>
 								<input
-									id="physical_address"
 									name="physical_address"
 									type="text"
 									placeholder="г. Москва, ул. Ленина, д. 1"
@@ -82,7 +80,6 @@ templ clientsFormCreateClientTempl() {
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">Эл. почта</legend>
 								<input
-									id="email"
 									name="email"
 									type="email"
 									placeholder="ivanov@example.com"
@@ -94,8 +91,7 @@ templ clientsFormCreateClientTempl() {
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">Контрагент</legend>
 								<select name="contractor" class="select validator input-bordered w-full max-w-xs">
-									<option disabled selected value="">Не выбран:</option>
-									<option>Empty</option>
+									<option value="">Не выбран</option>
 								</select>
 							</fieldset>
 						</div>
@@ -103,7 +99,7 @@ templ clientsFormCreateClientTempl() {
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">Статус клиента (метка)</legend>
 								<select name="mark" class="select validator input-bordered w-full max-w-xs">
-									<option disabled selected value="">Не выбран:</option>
+									<option value="">Не выбран</option>
 									for _, mark := range marks {
 										<option>{ mark }</option>
 									}
@@ -114,7 +110,7 @@ templ clientsFormCreateClientTempl() {
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">Рекламный канал (источник)</legend>
 								<select name="ad_channel" class="select validator input-bordered w-full max-w-xs">
-									<option disabled selected value="">Не выбран:</option>
+									<option value="">Не выбран</option>
 									for _, ad_channel := range ad_channels {
 										<option>{ ad_channel }</option>
 									}
@@ -125,7 +121,6 @@ templ clientsFormCreateClientTempl() {
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">Примечание</legend>
 								<textarea
-									id="note"
 									name="note"
 									rows="3"
 									placeholder="Введите примечание..."
@@ -167,7 +162,6 @@ templ clientsFormCreateClientTempl() {
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">Название организации <span style="color: red;">*</span></legend>
 								<input
-									id="full_name"
 									name="full_name"
 									type="text"
 									placeholder=""
@@ -180,7 +174,6 @@ templ clientsFormCreateClientTempl() {
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">Телефон <span style="color: red;">*</span></legend>
 								<input
-									id="phones"
 									name="phones"
 									type="tel"
 									placeholder="+7 (___) ___-__-__"
@@ -196,7 +189,6 @@ templ clientsFormCreateClientTempl() {
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">Юридический адрес</legend>
 								<input
-									id="legal_address"
 									name="legal_address"
 									type="text"
 									placeholder=""
@@ -208,7 +200,6 @@ templ clientsFormCreateClientTempl() {
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">Фактический адрес</legend>
 								<input
-									id="physical_address"
 									name="physical_address"
 									type="text"
 									placeholder=""
@@ -220,7 +211,6 @@ templ clientsFormCreateClientTempl() {
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">Эл. почта</legend>
 								<input
-									id="email"
 									name="email"
 									type="email"
 									placeholder="ivanov@example.com"
@@ -232,8 +222,7 @@ templ clientsFormCreateClientTempl() {
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">Контрагент</legend>
 								<select name="contractor" class="select validator input-bordered w-full max-w-xs">
-									<option disabled selected value="">Не выбран:</option>
-									<option>Empty</option>
+									<option value="">Не выбран</option>
 								</select>
 							</fieldset>
 						</div>
@@ -241,7 +230,7 @@ templ clientsFormCreateClientTempl() {
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">Статус клиента (метка)</legend>
 								<select name="mark" class="select validator input-bordered w-full max-w-xs">
-									<option disabled selected value="">Не выбран:</option>
+									<option value="">Не выбран</option>
 									for _, mark := range marks {
 										<option>{ mark }</option>
 									}
@@ -252,7 +241,7 @@ templ clientsFormCreateClientTempl() {
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">Рекламный канал (источник)</legend>
 								<select name="ad_channel" class="select validator input-bordered w-full max-w-xs">
-									<option disabled selected value="">Не выбран:</option>
+									<option value="">Не выбран</option>
 									for _, ad_channel := range ad_channels {
 										<option>{ ad_channel }</option>
 									}
@@ -263,7 +252,6 @@ templ clientsFormCreateClientTempl() {
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">Примечание</legend>
 								<textarea
-									id="note"
 									name="note"
 									rows="3"
 									placeholder="Введите примечание..."
@@ -313,15 +301,25 @@ templ ClientsTempl() {
 			<!-- head -->
 			<thead>
 				<tr>
-					<th class="px-4 py-2">#</th>
-					<th class="px-4 py-2">Id</th>
+					// <th class="px-4 py-2">#</th>
+					// <th class="px-4 py-2">Id</th>
 					<th class="px-4 py-2">Id2</th>
-					<th class="px-4 py-2">Метка</th>
-					<th class="px-4 py-2">ФИО</th>
-					<th class="px-4 py-2">Телефон</th>
-					<th class="px-4 py-2">Адрес</th>
-					<th class="px-4 py-2">Эл.почта</th>
-					<th class="px-4 py-2">Действия</th>
+					<th class="px-4 py-2">Mark</th>
+					<th class="px-4 py-2">Contractor</th>
+					<th class="px-4 py-2">Full Name</th>
+					<th class="px-4 py-2">Type</th>
+					<th class="px-4 py-2">Phones</th>
+					<th class="px-4 py-2">Email</th>
+					<th class="px-4 py-2">Legal Address</th>
+					<th class="px-4 py-2">Physical Address</th>
+					<th class="px-4 py-2">Registration Date</th>
+					<th class="px-4 py-2">Ad Channel</th>
+					<th class="px-4 py-2">Reg Data 1</th>
+					<th class="px-4 py-2">Reg Data 2</th>
+					<th class="px-4 py-2">Note</th>
+					<th class="px-4 py-2">Request Count</th>
+					<th class="px-4 py-2">Birthday</th>
+					<th class="px-4 py-2">Income</th>
 				</tr>
 			</thead>
 			// {{ prevPage := currPage }}
@@ -330,16 +328,35 @@ templ ClientsTempl() {
 			// }
 			<tbody>
 				{{ clients, _ := api.Fetch[entities.ClientInfo]("/api/v1/clients/" + strconv.Itoa(clientCountLimit) + "/" + strconv.Itoa(clientOffset)) }}
-				for idx, client := range clients {
+				for _, client := range clients {
 					<tr>
-						<td>{ strconv.Itoa(idx) }</td>
-						<td>{ client.Id }</td>
+						// <td>{ strconv.Itoa(idx) }</td>
+						// <td>{ client.Id }</td>
 						<td>{ client.Id2 }</td>
 						<td>{ client.Mark }</td>
+						<td>{ strconv.FormatBool(client.Contractor) }</td>
 						<td>{ client.FullName }</td>
-						<td>{ client.Phones }</td>
-						<td>{ client.LegalAddress }</td>
+						<td>{ client.Type }</td>
+						<td>
+							<select class="select input-bordered">
+								<option value="">Не выбран</option>
+								{{ phones, _ := database.GetInstance().GetClients().FetchClientPhones(client.Id) }}
+								for _, phone := range phones {
+									<option>{ phone }</option>
+								}
+							</select>
+						</td>
 						<td>{ client.Email }</td>
+						<td>{ client.LegalAddress }</td>
+						<td>{ client.PhysicalAddress }</td>
+						<td>{ client.RegistrationDate }</td>
+						<td>{ client.AdChannel }</td>
+						<td>{ client.RegData1 }</td>
+						<td>{ client.RegData2 }</td>
+						<td>{ client.Note }</td>
+						<td>{ strconv.Itoa(client.RequestCount) }</td>
+						<td>{ client.Birthday }</td>
+						<td>{ client.Income.String() }</td>
 						<td class="px-4 py-2 flex justify-center">
 							<button
 								class="btn bg-red-400 text-white px-2 py-1 rounded"

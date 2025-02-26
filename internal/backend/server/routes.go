@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
@@ -122,13 +123,34 @@ func (s *Server) RegisterRoutes() http.Handler {
 	// e.GET("/api/v1/client/:id", nil)
 
 	e.POST("/api/v1/client", func(c echo.Context) error {
+		var err error
+
+		phones := c.FormValue("phones")
 		client := new(entities.ClientInfo)
 		if err := c.Bind(client); err != nil {
 			return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
 		}
-
 		client.Id = uuid.NewString()
-		err := database.GetInstance().GetClients().InsertClient(*client)
+		if client.Id2 == "" {
+			client.Id2 = uuid.NewString()
+		}
+		if client.RegistrationDate == "" {
+			client.RegistrationDate = time.Now().Format(time.DateTime)
+		}
+		if phones != "" {
+			err = database.GetInstance().GetClients().InsertClientPhones(client.Id, []string{phones})
+			if err != nil {
+				return fmt.Errorf("Failed insert client phones: %s", err)
+			}
+		} else {
+			err = database.GetInstance().GetClients().InsertClientPhones(client.Id, client.Phones)
+			if err != nil {
+				return fmt.Errorf("Failed insert client phones: %s", err)
+			}
+
+		}
+
+		err = database.GetInstance().GetClients().InsertClient(*client)
 		if err != nil {
 			return fmt.Errorf("Failed insert client: %s", err)
 		}

@@ -1,14 +1,17 @@
 include .env
 
-.PHONY: all tailwind-build migrations pre-build build-all run-cli run-server clean
+.PHONY: all tailwind-build migrations-up migrations-reset pre-build build-all run-cli run-server clean
 
 all: build
 
 tailwind-build:
 	@tailwindcss -o internal/frontend/assets/css/tw.css --minify
 
-migrations:
+migrations-up:
 	@goose -dir ./migrations/ sqlite3 ${DB_URL} up
+
+migrations-reset:
+	@goose -dir ./migrations/ sqlite3 ${DB_URL} reset
 
 pre-build:
 	@mkdir -p build

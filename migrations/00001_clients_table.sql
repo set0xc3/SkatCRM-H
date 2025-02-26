@@ -3,10 +3,9 @@ CREATE TABLE clients (
   id TEXT PRIMARY KEY,
   id2 TEXT,
   mark TEXT,
-  contractor TEXT,
+  contractor INTEGER, -- 0 или 1 вместо TEXT
   full_name TEXT,
   type TEXT,
-  phones TEXT,
   email TEXT,
   legal_address TEXT,
   physical_address TEXT,
@@ -15,9 +14,9 @@ CREATE TABLE clients (
   reg_data_1 TEXT,
   reg_data_2 TEXT,
   note TEXT,
-  request_count TEXT,
+  request_count INTEGER,
   birthday TEXT,
-  income TEXT -- Доход
+  income NUMERIC -- NUMERIC (или REAL) для числового значения
 );
 
 -- +goose Down
