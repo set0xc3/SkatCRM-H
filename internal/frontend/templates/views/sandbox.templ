@@ -1,28 +1,63 @@
 package views
 
 templ SandboxTempl() {
-	<div class="max-w-md mx-auto space-y-4">
-		<h1 class="text-xl font-bold">Key-Value Pairs</h1>
-		<!-- Форма добавления новой пары -->
-		<form
-			hx-post="/add-row"
-			hx-target="#rows"
-			hx-swap="beforeend"
-			class="flex items-center space-x-2"
-		>
-			<input
-				name="key"
-				placeholder="Variable"
-				class="input input-bordered w-1/2"
-			/>
-			<input
-				name="value"
-				placeholder="Value"
-				class="input input-bordered w-1/2"
-			/>
-			<button class="btn btn-primary">Add</button>
-		</form>
-		<!-- Сюда будут вставляться новые строки -->
-		<div id="rows" class="space-y-2"></div>
-	</div>
+	<!DOCTYPE html>
+	<html data-theme="light" lang="ru">
+		<head>
+			<meta charset="utf-8"/>
+			<title>MySite</title>
+			<link href="assets/css/tw.css" rel="stylesheet"/>
+			<script src="assets/js/htmx.min.js"></script>
+		</head>
+		<body class="flex flex-col h-screen">
+			<!-- Navbar -->
+			<header class="bg-gray-800 text-white p-4 text-center">
+				Navbar
+			</header>
+			<!-- Основной контейнер: Sidebar + Content -->
+			<div class="flex flex-1 overflow-hidden">
+				<!-- Sidebar фиксированной ширины -->
+				<aside class="w-64 bg-gray-200 p-4">
+					Sidebar
+				</aside>
+				<!-- Скроллируемый основной контент -->
+				<main class="flex-1 overflow-y-auto p-4 pb-24">
+					<div class="space-y-4">
+						<!-- Пример контента для проверки прокрутки -->
+						<p>Контент 1</p>
+						<p>Контент 2</p>
+						<p>Контент 3</p>
+						<p>Контент 4</p>
+						<p>Контент 5</p>
+						<p>Контент 6</p>
+						<p>Контент 7</p>
+						<p>Контент 8</p>
+						<p>Контент 9</p>
+						<p>Контент 10</p>
+						<p>Контент 11</p>
+						<p>Контент 12</p>
+						<p>Контент 13</p>
+						<p>Контент 14</p>
+						<p>Контент 15</p>
+						<div>
+							<div id="alert"></div>
+							<button
+								hx-get="/clients"
+								hx-select="#app"
+								hx-select-oob="#alert"
+								hx-swap="outerHTML"
+							>
+								Get Info!
+							</button>
+						</div>
+					</div>
+				</main>
+			</div>
+			<!-- Фиксированная пагинация.
+       Класс left-64 сдвигает элемент вправо на ширину sidebar (w-64) -->
+			<div class="fixed bottom-0 left-64 right-0 bg-white shadow p-4 text-center z-999">
+				Pagination
+			</div>
+		</body>
+	</html>
 }

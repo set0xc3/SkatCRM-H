@@ -3,7 +3,9 @@ package components
 import (
 	"math"
 	"strconv"
-	_ "fmt"
+
+	"SkatCRM-Tiny/internal/frontend/app"
+	"SkatCRM-Tiny/internal/backend/api"
 
 	"SkatCRM-Tiny/internal/frontend/templates/icons"
 )
@@ -57,63 +59,59 @@ func GetPages(currPage, itemCount int) []int {
 	return pages
 }
 
-templ Pagination(url string, currPage int, itemCount int) {
+templ PaginationTempl() {
+	{{ url := app.CurrentUrlPath }}
+	{{ currPage := app.CurrentPageIdx }}
+	{{ itemCount, _ := api.FetchOne[int]("/api/v1" + app.CurrentUrlPath) }}
+	{{ pageLimit := 10 }}
+	{{ totalPages := int(math.Ceil(float64(itemCount) / float64(pageLimit))) }}
+	// Ограничиваем текущую страницу допустимым диапазоном
+	if currPage < 1 {
+		{{ currPage = 1 }}
+	} else if currPage > totalPages {
+		{{ currPage = totalPages }}
+	}
 	// currPage здесь 1‑индексирован.
 	<div class="join flex justify-center">
-		<button
+		<a
 			class="join-item btn btn-sm"
-			hx-get={ "/views/" + url + "?page=1" }
-			hx-push-url={ "/" + url + "?page=1" }
-			hx-swap="innerHTML"
-			hx-target=".wrap"
+			href={ templ.SafeURL(url + "?page=1") }
 		>
 			<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={ icons.ChevronDoubleLeft }></path>
 			</svg>
-		</button>
-		<button
+		</a>
+		<a
 			class="join-item btn btn-sm"
-			hx-get={ "/views/" + url + "?page=" + strconv.Itoa(PrevPage(currPage)) }
-			hx-push-url={ "/" + url + "?page=" + strconv.Itoa(PrevPage(currPage)) }
-			hx-swap="innerHTML"
-			hx-target=".wrap"
+			href={ templ.SafeURL(url + "?page=" + strconv.Itoa(PrevPage(currPage))) }
 		>
 			<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={ icons.ChevronLeft }></path>
 			</svg>
-		</button>
+		</a>
 		for _, page := range GetPages(currPage+1, itemCount) {
-			<button
+			<a
 				class="join-item btn btn-sm"
-				hx-get={ "/views/" + url + "?page=" + strconv.Itoa(page) }
-				hx-push-url={ "/" + url + "?page=" + strconv.Itoa(page) }
-				hx-swap="innerHTML"
-				hx-target=".wrap"
+				href={ templ.SafeURL(url + "?page=" + strconv.Itoa(page)) }
 			>
 				{ strconv.Itoa(page) }
-			</button>
+			</a>
 		}
-		<button
+		<a
 			class="join-item btn btn-sm"
-			hx-get={ "/views/" + url + "?page=" + strconv.Itoa(NextPage(currPage, itemCount)) }
-			hx-push-url={ "/" + url + "?page=" + strconv.Itoa(NextPage(currPage, itemCount)) }
-			hx-swap="innerHTML"
-			hx-target=".wrap"
+			href={ templ.SafeURL(url + "?page=" + strconv.Itoa(NextPage(currPage, itemCount))) }
 		>
 			<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={ icons.ChevronRight }></path>
 			</svg>
-		</button>
-		<button
+		</a>
+		<a
 			class="join-item btn btn-sm"
-			hx-get={ "/views/" + url + "?page=" + strconv.Itoa(int(math.Ceil(float64(itemCount)/PageLimit))) }
-			hx-push-url={ "/" + url + "?page=" + strconv.Itoa(int(math.Ceil(float64(itemCount)/PageLimit))) }
-			hx-swap="innerHTML"
-			hx-target=".wrap"
+			href={ templ.SafeURL(url + "?page=" + strconv.Itoa(int(math.Ceil(float64(itemCount)/PageLimit)))) }
 		>
 			<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={ icons.ChevronDoubleRight }></path>
 			</svg>
-		</button>
+		</a>
 	</div>
 }

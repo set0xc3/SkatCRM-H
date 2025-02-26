@@ -38,7 +38,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	e.GET("/", func(c echo.Context) error {
 		app.CurrentUrlPath = c.Request().URL.Path
-		return templates.Render(c, templates.LayoutTempl(views.SandboxTempl()))
+		return templates.Render(c, templates.LayoutTempl(views.EmptyTempl()))
 	})
 	e.GET("/clients", func(c echo.Context) error {
 		page, _ := strconv.Atoi(c.QueryParam("page"))
@@ -73,7 +73,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.GET("/views/", func(c echo.Context) error {
 		page, _ := strconv.Atoi(c.QueryParam("page"))
 		app.CurrentPageIdx = page
-		return templates.Render(c, views.SandboxTempl())
+		return templates.Render(c, views.EmptyTempl())
 	})
 	e.GET("/views/clients", func(c echo.Context) error {
 		page, _ := strconv.Atoi(c.QueryParam("page"))
@@ -105,7 +105,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 		return c.JSON(http.StatusOK, "")
 	})
 	e.GET("/sandbox", func(c echo.Context) error {
-		return templates.Render(c, templates.LayoutTempl(views.SandboxTempl()))
+		return templates.Render(c, views.SandboxTempl())
 	})
 
 	e.GET("/api/v1/clients", func(c echo.Context) error {
@@ -133,7 +133,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 			return fmt.Errorf("Failed insert client: %s", err)
 		}
 
-		return templates.Render(c, views.ClientsTempl())
+		return templates.Render(c, templates.LayoutTempl(views.ClientsTempl()))
 	})
 	e.DELETE("/api/v1/client/:id", func(c echo.Context) error {
 		id := c.Param("id")
@@ -143,7 +143,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 			return fmt.Errorf("Failed delete client: %s", err)
 		}
 
-		return c.NoContent(http.StatusOK)
+		return templates.Render(c, templates.LayoutTempl(views.ClientsTempl()))
 	})
 
 	e.GET("/api/v1/marks", func(c echo.Context) error {

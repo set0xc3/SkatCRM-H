@@ -7,13 +7,13 @@ import (
 	"SkatCRM-Tiny/internal/frontend/app"
 	"SkatCRM-Tiny/internal/backend/api"
 	"SkatCRM-Tiny/internal/backend/database/entities"
-	"SkatCRM-Tiny/internal/frontend/templates/components"
+	_ "SkatCRM-Tiny/internal/frontend/templates/components"
 )
 
 templ clientsFormCreateClientTempl() {
 	{{ marks, _ := api.Fetch[string]("/api/v1/marks") }}
 	{{ ad_channels, _ := api.Fetch[string]("/api/v1/ad_channels") }}
-	<button class="btn" onclick="openClientModal()">Создать Клиента</button>
+	<button class="btn" onclick="clients_modal_create_client.showModal()">Создать Клиента</button>
 	<dialog id="clients_modal_create_client" class="modal">
 		<div class="modal-box">
 			<h3 class="text-lg font-bold">Создать Клиента</h3>
@@ -27,7 +27,16 @@ templ clientsFormCreateClientTempl() {
 					checked="checked"
 				/>
 				<div role="tabpanel" class="tab-content bg-base-100 p-6">
-					<form class="space-y-4" id="myForm" hx-post="/api/v1/client" hx-trigger="submit" hx-target=".wrap" hx-swap="innerHTML">
+					<form
+						class="space-y-4"
+						id="myForm"
+						hx-post="/api/v1/client"
+						hx-trigger="submit"
+						hx-select="#app"
+						hx-select-oob="#app"
+						hx-swap="innerHTML"
+						hx-on::after-request="if(event.detail.successful) this.reset()"
+					>
 						<div>
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">ФИО <span style="color: red;">*</span></legend>
@@ -126,7 +135,7 @@ templ clientsFormCreateClientTempl() {
 						</div>
 						<div class="modal-action">
 							<button class="btn" type="submit">Создать</button>
-							<button class="btn" type="button" onclick="closeClientModal()">Закрыть</button>
+							<button class="btn" type="button" onclick="clients_modal_create_client.close()">Закрыть</button>
 						</div>
 						<input
 							type="hidden"
@@ -144,7 +153,16 @@ templ clientsFormCreateClientTempl() {
 					aria-label="Юр. лицо"
 				/>
 				<div role="tabpanel" class="tab-content bg-base-100 p-6">
-					<form class="space-y-4" id="myForm" hx-post="/api/v1/client" hx-trigger="submit" hx-target=".wrap" hx-swap="innerHTML">
+					<form
+						class="space-y-4"
+						id="myForm"
+						hx-post="/api/v1/client"
+						hx-trigger="submit"
+						hx-select="#app"
+						hx-select-oob="#app"
+						hx-swap="innerHTML"
+						hx-on::after-request="if(event.detail.successful) this.reset()"
+					>
 						<div>
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">Название организации <span style="color: red;">*</span></legend>
@@ -255,7 +273,7 @@ templ clientsFormCreateClientTempl() {
 						</div>
 						<div class="modal-action">
 							<button class="btn" type="submit">Создать</button>
-							<button class="btn" type="button" onclick="closeClientModal()">Закрыть</button>
+							<button class="btn">Закрыть</button>
 						</div>
 						<input
 							type="hidden"
@@ -268,29 +286,6 @@ templ clientsFormCreateClientTempl() {
 			</div>
 		</div>
 	</dialog>
-	<script>
-	  function resetModalForm() {
-      const modal = document.getElementById('clients_modal_create_client');
-      if (modal) {
-        modal.querySelectorAll('form').forEach(form => form.reset());
-        const defaultTab = modal.querySelector('input[aria-label="Физ. лицо"]');
-        if (defaultTab) {
-          defaultTab.checked = true;
-        }
-      }
-    }
-
-    function openClientModal() {
-      const modal = document.getElementById('clients_modal_create_client');
-      // resetModalForm();
-      modal.showModal();
-    }
-
-    function closeClientModal() {
-      const modal = document.getElementById('clients_modal_create_client');
-      modal.close();
-    }
-  </script>
 }
 
 templ ClientsTempl() {
@@ -329,11 +324,11 @@ templ ClientsTempl() {
 					<th class="px-4 py-2">Действия</th>
 				</tr>
 			</thead>
-			{{ prevPage := currPage }}
-			if (totalPages-1) % 10 == 0 && totalPages == currPage && clientCount-clientOffset == 1 {
-				{{ prevPage = currPage - 1 }}
-			}
-			<tbody hx-get={ "/views/clients" + "?page=" + strconv.Itoa(prevPage) } hx-push-url={ "/clients" + "?page=" + strconv.Itoa(prevPage) } hx-target=".wrap" hx-swap="innerHTML">
+			// {{ prevPage := currPage }}
+			// if (totalPages-1) % 10 == 0 && totalPages == currPage && clientCount-clientOffset == 1 {
+			// 	{{ prevPage = currPage - 1 }}
+			// }
+			<tbody>
 				{{ clients, _ := api.Fetch[entities.ClientInfo]("/api/v1/clients/" + strconv.Itoa(clientCountLimit) + "/" + strconv.Itoa(clientOffset)) }}
 				for idx, client := range clients {
 					<tr>
@@ -350,6 +345,9 @@ templ ClientsTempl() {
 								class="btn bg-red-400 text-white px-2 py-1 rounded"
 								hx-delete={ "/api/v1/client/" + client.Id }
 								hx-confirm="Вы уверены?"
+								hx-select="#app"
+								hx-select-oob="#app"
+								hx-swap="innerHTML"
 							>
 								Delete
 							</button>
@@ -359,5 +357,4 @@ templ ClientsTempl() {
 			</tbody>
 		</table>
 	</div>
-	@components.Pagination("clients", currPage, clientCount)
 }

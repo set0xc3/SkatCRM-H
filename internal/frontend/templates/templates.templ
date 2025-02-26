@@ -28,26 +28,42 @@ templ LayoutTempl(view templ.Component) {
     }
   </style>
 	<!DOCTYPE html>
-	<html data-theme="light" lang="en">
+	<html data-theme="light" lang="ru">
 		<head>
 			<meta charset="utf-8"/>
 			<title>MySite</title>
 			<link href="assets/css/tw.css" rel="stylesheet"/>
 			<script src="assets/js/htmx.min.js"></script>
 		</head>
-		<body hx-boost="true" class="flex flex-col h-full gap-[2px] bg-[#CDD2D6]">
-			@components.NavbarTempl()
-			<div class="flex flex-1 gap-[2px]">
-				@components.SidebarTempl(sidebarItems)
-				<!-- Main Content -->
-				<main class="bg-base-200 rounded-[5px] flex-1 p-4 gap-[2px] bg-white masked-main">
-					<div id="views-lazy-load" class="htmx-indicator rounded-[5px]">
-						<span class="loading loading-infinity loading-lg text-white"></span>
-					</div>
-					<div class="wrap">
-						@view
-					</div>
-				</main>
+		<body class="flex flex-col h-screen">
+			<div id="app" hx-boost="true">
+				<!-- Navbar -->
+				<header class="text-center">
+					@components.NavbarTempl()
+				</header>
+				<!-- Основной контейнер: Sidebar + Content -->
+				<div class="flex flex-1 overflow-hidden">
+					<!-- Sidebar фиксированной ширины -->
+					<aside>
+						<div id="sidebar">
+							@components.SidebarTempl(sidebarItems)
+						</div>
+					</aside>
+					<!-- Скроллируемый основной контент -->
+					<main class="flex-1 overflow-y-auto p-4 pb-24">
+						<div id="views-lazy-load" class="htmx-indicator rounded-[5px]">
+							<span class="loading loading-infinity loading-lg text-white"></span>
+						</div>
+						<div id="view" class="view">
+							@view
+						</div>
+					</main>
+				</div>
+				<!-- Фиксированная пагинация.
+         Класс left-64 сдвигает элемент вправо на ширину sidebar (w-64) -->
+				<div id="pagination" class="fixed bottom-0 left-64 right-0 bg-white shadow p-4 text-center z-999">
+					@components.PaginationTempl()
+				</div>
 			</div>
 		</body>
 	</html>
