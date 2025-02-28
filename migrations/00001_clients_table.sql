@@ -3,7 +3,7 @@ CREATE TABLE clients (
   id TEXT PRIMARY KEY,
   id2 TEXT,
   mark TEXT,
-  contractor INTEGER, -- 0 или 1 вместо TEXT
+  contractor INTEGER,
   full_name TEXT,
   type TEXT,
   email TEXT,
@@ -19,5 +19,13 @@ CREATE TABLE clients (
   income NUMERIC -- NUMERIC (или REAL) для числового значения
 );
 
+CREATE TABLE client_phones (
+  client_id INTEGER,
+  phone TEXT,
+  FOREIGN KEY (client_id) REFERENCES clients (id)
+);
+
 -- +goose Down
+DROP TABLE client_phones;
+
 DROP TABLE clients;

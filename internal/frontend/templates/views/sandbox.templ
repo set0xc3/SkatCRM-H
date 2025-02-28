@@ -22,34 +22,34 @@ templ SandboxTempl() {
 				</aside>
 				<!-- Скроллируемый основной контент -->
 				<main class="flex-1 overflow-y-auto p-4 pb-24">
+					<button
+						class="btn btn-primary mt-4"
+						hx-post="/api/v1/client/delete"
+						hx-include="[name='selected']:checked"
+					>
+						Отправить
+					</button>
 					<div class="space-y-4">
-						<!-- Пример контента для проверки прокрутки -->
-						<p>Контент 1</p>
-						<p>Контент 2</p>
-						<p>Контент 3</p>
-						<p>Контент 4</p>
-						<p>Контент 5</p>
-						<p>Контент 6</p>
-						<p>Контент 7</p>
-						<p>Контент 8</p>
-						<p>Контент 9</p>
-						<p>Контент 10</p>
-						<p>Контент 11</p>
-						<p>Контент 12</p>
-						<p>Контент 13</p>
-						<p>Контент 14</p>
-						<p>Контент 15</p>
-						<div>
-							<div id="alert"></div>
-							<button
-								hx-get="/clients"
-								hx-select="#app"
-								hx-select-oob="#alert"
-								hx-swap="outerHTML"
-							>
-								Get Info!
-							</button>
-						</div>
+						<table class="table">
+							<thead>
+								<tr>
+									<th><input type="checkbox" class="checkbox" onclick="toggleAll(this)"/></th>
+									<th>Название</th>
+									<th>Описание</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><input type="checkbox" name="selected" value="ed56fe50-d599-43a5-a7da-d2b38c6e1fbe" class="checkbox"/></td>
+								</tr>
+								<tr>
+									<td><input type="checkbox" name="selected" value="c358a1aa-e821-4f82-b64d-0711302923b7" class="checkbox"/></td>
+								</tr>
+								<tr>
+									<td><input type="checkbox" name="selected" value="189d9b75-675c-4097-9ee4-6e33a2436835" class="checkbox"/></td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 				</main>
 			</div>
@@ -60,4 +60,12 @@ templ SandboxTempl() {
 			</div>
 		</body>
 	</html>
+	<script>
+	function toggleAll(source) {
+    const checkboxes = document.querySelectorAll('.checkbox');
+    checkboxes.forEach(checkbox => {
+      checkbox.checked = source.checked;
+    });
+	 }
+	</script>
 }

@@ -157,6 +157,17 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 		return templates.Render(c, templates.LayoutTempl(views.ClientsTempl()))
 	})
+
+	e.POST("/api/v1/client/delete", func(c echo.Context) error {
+		selected, _ := c.FormParams()
+		for _, value := range selected {
+			fmt.Println("client_id:", value)
+		}
+
+		return c.JSON(http.StatusNoContent, "")
+		// return templates.Render(c, templates.LayoutTempl(views.ClientsTempl()))
+	})
+
 	e.DELETE("/api/v1/client/:id", func(c echo.Context) error {
 		id := c.Param("id")
 
