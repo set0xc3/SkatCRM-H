@@ -1,0 +1,12 @@
+package views
+
+templ checkboxToggleAll() {
+	<script>
+		function checkboxToggleAll(source) {
+		  const checkboxes = document.querySelectorAll('.checkbox');
+			  checkboxes.forEach(checkbox => {
+			  checkbox.checked = source.checked;
+		  });
+		}
+	</script>
+}

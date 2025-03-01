@@ -14,7 +14,21 @@ import (
 templ clientsFormCreateClientTempl() {
 	{{ marks, _ := api.Fetch[string]("/api/v1/marks") }}
 	{{ ad_channels, _ := api.Fetch[string]("/api/v1/ad_channels") }}
-	<button class="btn" onclick="clients_modal_create_client.showModal()">Создать Клиента</button>
+	<button class="btn" onclick="clients_modal_create_client.showModal()">Создать</button>
+	<button
+		class="btn"
+		hx-post="/api/v1/client/edit"
+		hx-include="[name='selected']:checked"
+	>
+		Изменить
+	</button>
+	<button
+		class="btn"
+		hx-post="/api/v1/client/delete"
+		hx-include="[name='selected']:checked"
+	>
+		Удалить
+	</button>
 	<dialog id="clients_modal_create_client" class="modal">
 		<div class="modal-box">
 			<h3 class="text-lg font-bold">Создать Клиента</h3>
@@ -301,6 +315,7 @@ templ ClientsTempl() {
 			<!-- head -->
 			<thead>
 				<tr>
+					<th><input type="checkbox" class="checkbox" onclick="checkboxToggleAll(this)"/></th>
 					// <th class="px-4 py-2">#</th>
 					// <th class="px-4 py-2">Id</th>
 					<th class="px-4 py-2">Id2</th>
@@ -330,6 +345,7 @@ templ ClientsTempl() {
 				{{ clients, _ := api.Fetch[entities.ClientInfo]("/api/v1/clients/" + strconv.Itoa(clientCountLimit) + "/" + strconv.Itoa(clientOffset)) }}
 				for _, client := range clients {
 					<tr>
+						<td><input type="checkbox" name="selected" value={ client.Id } class="checkbox"/></td>
 						// <td>{ strconv.Itoa(idx) }</td>
 						// <td>{ client.Id }</td>
 						<td>{ client.Id2 }</td>
@@ -359,14 +375,19 @@ templ ClientsTempl() {
 						<td>{ client.Income.String() }</td>
 						<td class="px-4 py-2 flex justify-center">
 							<button
-								class="btn bg-red-400 text-white px-2 py-1 rounded"
+								class="btn"
+							>
+								Изменить
+							</button>
+							<button
+								class="btn"
 								hx-delete={ "/api/v1/client/" + client.Id }
 								hx-confirm="Вы уверены?"
 								hx-select="#app"
 								hx-select-oob="#app"
 								hx-swap="innerHTML"
 							>
-								Delete
+								Удалить
 							</button>
 						</td>
 					</tr>
@@ -374,4 +395,5 @@ templ ClientsTempl() {
 			</tbody>
 		</table>
 	</div>
+	@checkboxToggleAll()
 }
